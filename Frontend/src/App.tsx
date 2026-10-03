@@ -1,6 +1,7 @@
 import { useState, useEffect, type ReactNode } from "react";
 import AthleteSignUp from "./components/AthleteSignUp";
 import AthleteOnboarding, { type AthleteProfileData } from "./components/AthleteOnboarding";
+import LandingPage from "./components/LandingPage";
 
 type Tab = "home" | "standings" | "profile" | "settings";
 
@@ -407,11 +408,13 @@ function Field({
 function Login({
   onLogin,
   onNavigateToSignUpAthlete,
+  onBackToLanding,
   signupNotice,
   defaultEmail = "",
 }: {
   onLogin: () => void;
   onNavigateToSignUpAthlete: () => void;
+  onBackToLanding?: () => void;
   signupNotice?: string | null;
   defaultEmail?: string;
 }) {
@@ -426,6 +429,15 @@ function Login({
   return (
     <Phone>
       <div className="absolute inset-0 flex flex-col justify-center px-7">
+        {onBackToLanding && (
+          <button
+            type="button"
+            onClick={onBackToLanding}
+            className="absolute top-6 left-6 inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-mute hover:text-volt transition"
+          >
+            ← Back to Website
+          </button>
+        )}
         <div className="mb-8 text-center">
           <Logo size="text-7xl" />
           <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.25em] text-mute">
@@ -556,14 +568,13 @@ function Settings({ go, onLogout }: { go: (t: Tab) => void; onLogout: () => void
 }
 
 export default function App() {
+  const [viewMode, setViewMode] = useState<"landing" | "portal">("landing");
   const [authed, setAuthed] = useState(false);
   const [authScreen, setAuthScreen] = useState<"login" | "signup_athlete" | "onboarding_athlete">("login");
   const [tab, setTab] = useState<Tab>("home");
   const [signupNotice, setSignupNotice] = useState<string | null>(null);
   const [prefillEmail, setPrefillEmail] = useState("");
   const [pendingAthlete, setPendingAthlete] = useState({
-    firstName: "",
-    lastName: "",
     email: "",
   });
   const [athleteProfile, setAthleteProfile] = useState<AthleteProfileData>({
@@ -579,8 +590,35 @@ export default function App() {
 
   const go = (t: Tab) => setTab(t);
 
+  if (viewMode === "landing") {
+    return (
+      <LandingPage
+        onEnterApp={() => {
+          setViewMode("portal");
+        }}
+        onSignUpAthlete={() => {
+          setAuthScreen("signup_athlete");
+          setViewMode("portal");
+        }}
+      />
+    );
+  }
+
   return (
-    <main className="flex min-h-dvh items-center justify-center bg-[#07080a] sm:p-4">
+    <main className="relative flex min-h-dvh flex-col items-center justify-center bg-[#07080a] sm:p-4">
+      {/* Floating Website Link */}
+      <div className="fixed top-4 left-4 z-50">
+        <button
+          onClick={() => setViewMode("landing")}
+          className="flex items-center gap-2 rounded-xl border border-line bg-ink/90 px-3.5 py-2 font-mono text-xs text-white backdrop-blur-md transition hover:border-volt hover:text-volt shadow-2xl"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path d="M19 12H5M12 19l-7-7 7-7" />
+          </svg>
+          <span>Back to Website</span>
+        </button>
+      </div>
+
       {!authed ? (
         authScreen === "onboarding_athlete" ? (
           <Phone>
@@ -600,8 +638,6 @@ export default function App() {
               onNavigateToLogin={() => setAuthScreen("login")}
               onSuccess={(info) => {
                 setPendingAthlete({
-                  firstName: info.firstName,
-                  lastName: info.familyName,
                   email: info.email,
                 });
                 setAuthScreen("onboarding_athlete");
@@ -618,6 +654,7 @@ export default function App() {
               setSignupNotice(null);
               setAuthScreen("signup_athlete");
             }}
+            onBackToLanding={() => setViewMode("landing")}
             signupNotice={signupNotice}
             defaultEmail={prefillEmail}
           />
