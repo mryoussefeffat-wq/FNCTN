@@ -1,1 +1,13 @@
 Docs
+.env
+*.env
+Backend/.venv/
+.venv/
+__pycache__/
+*.pyc
+Frontend/node_modules/
+node_modules/
+Frontend/dist/
+dist/
+.DS_Store
+Thumbs.db
