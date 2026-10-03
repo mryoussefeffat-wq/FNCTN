@@ -1,0 +1,10 @@
+{
+  "description": "Connect university athletes and scouts through a dynamic platform for tracking sports tournaments, live scores, and player profiles.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
