@@ -48,7 +48,7 @@ app.add_middleware(
 )
 
 # Register routers
-from Authentication.Routes.authRoutes import router as auth_router
+from Services.Authentication.Routes.authRoutes import router as auth_router
 
 app.include_router(auth_router)
 

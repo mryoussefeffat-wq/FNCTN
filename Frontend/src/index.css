@@ -7,24 +7,46 @@
   --color-ink: #0f1115;
   --color-card: #181b21;
   --color-line: #2a2d35;
+
+  /* ==========================================================================
+     PRIMARY BRAND ACCENT COLOR
+     To switch between colors, just comment out the active one and uncomment the other:
+     ========================================================================== */
+  
+  /* ---> OPTION A: Volt Yellow (Active) <--- */
   --color-volt: #ccff00;
+
+  /* ---> OPTION B: Vibrant Red (Alternative) <--- */
+  /* --color-volt: #ff1e38; */
+
   --color-mute: #9aa0ac;
 }
 
+html,
 body {
   background: #07080a;
   color: #fff;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 ::selection {
+  /* ---> Selection for Yellow (Active) <--- */
   background: #ccff00;
   color: #0f1115;
+
+  /* ---> Selection for Vibrant Red (Alternative) <--- */
+  /* background: #ff1e38; color: #ffffff; */
 }
 
 .no-scrollbar {
   scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 .no-scrollbar::-webkit-scrollbar {
   display: none;
@@ -38,9 +60,24 @@ body {
 }
 
 @keyframes pulse-volt {
+  /* ---> Pulse Glow for Yellow (Active) <--- */
   0%, 100% { box-shadow: 0 0 0 0 rgba(204, 255, 0, 0.55), 0 0 18px rgba(204, 255, 0, 0.5); }
   50% { box-shadow: 0 0 0 6px rgba(204, 255, 0, 0), 0 0 26px rgba(204, 255, 0, 0.8); }
+
+  /* ---> Pulse Glow for Vibrant Red (Alternative) <---
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 30, 56, 0.55), 0 0 18px rgba(255, 30, 56, 0.5); }
+  50% { box-shadow: 0 0 0 6px rgba(255, 30, 56, 0), 0 0 26px rgba(255, 30, 56, 0.8); }
+  */
 }
 .live-glow {
   animation: pulse-volt 1.8s ease-in-out infinite;
+}
+
+/* Safe area padding utilities for mobile notch and home indicators */
+.safe-padding-top {
+  padding-top: max(1rem, env(safe-area-inset-top, 1rem));
+}
+
+.safe-padding-bottom {
+  padding-bottom: max(1.25rem, env(safe-area-inset-bottom, 1.25rem));
 }

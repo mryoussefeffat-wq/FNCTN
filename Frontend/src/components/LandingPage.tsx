@@ -1,255 +1,246 @@
-import { useState, type FormEvent } from "react";
+import { useState } from "react"
+import Logo from "./Logo"
+import TournamentCard from "./TournamentCard"
+import LiveMatchModal from "./LiveMatchModal"
+import TournamentHubModal from "./TournamentHubModal"
+import ContactSection from "./ContactSection"
+import { scrollToElement } from "../utils/formatters"
+import { TOURNAMENTS, CORPORATE_SPONSORS } from "../utils/constants"
+import type { TournamentEvent, EventStatusTab } from "../types/tournament"
 
 interface LandingPageProps {
-  onEnterApp: () => void;
-  onSignUpAthlete: () => void;
+  onEnterApp: () => void
+  onSignUpAthlete: () => void
+  onOpenFanHub?: (tournamentId?: string, matchId?: string) => void
 }
-
-interface TournamentEvent {
-  id: string;
-  title: string;
-  sport: "Football" | "Basketball" | "Padel" | "Track & Field";
-  date: string;
-  venue: string;
-  prize: string;
-  teamsCount: string;
-  slotsFilled: number;
-  totalSlots: number;
-  status: "Registration Open" | "Filling Fast" | "Scout Showcase";
-  image: string;
-}
-
-const EVENTS: TournamentEvent[] = [
-  {
-    id: "football-cup-26",
-    title: "Capital University Football Championship '26",
-    sport: "Football",
-    date: "May 12 – May 26, 2026",
-    venue: "Cairo International Stadium & CU Arena",
-    prize: "EGP 250,000",
-    teamsCount: "16 Universities",
-    slotsFilled: 13,
-    totalSlots: 16,
-    status: "Filling Fast",
-    image:
-      "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&h=500&fit=crop&auto=format",
-  },
-  {
-    id: "basketball-masters",
-    title: "Nile Valley Inter-Collegiate Basketball Masters",
-    sport: "Basketball",
-    date: "June 2 – June 14, 2026",
-    venue: "AUC Sports Complex, New Cairo",
-    prize: "EGP 150,000",
-    teamsCount: "12 Universities",
-    slotsFilled: 9,
-    totalSlots: 12,
-    status: "Registration Open",
-    image:
-      "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800&h=500&fit=crop&auto=format",
-  },
-  {
-    id: "padel-open",
-    title: "Red Sea Collegiate Padel Cup",
-    sport: "Padel",
-    date: "June 20 – June 24, 2026",
-    venue: "GUC Padel Arena, Tagamoa",
-    prize: "EGP 80,000",
-    teamsCount: "32 Doubles Pairs",
-    slotsFilled: 28,
-    totalSlots: 32,
-    status: "Filling Fast",
-    image:
-      "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=800&h=500&fit=crop&auto=format",
-  },
-  {
-    id: "sprint-showcase",
-    title: "National University Sprint & Athletics Showcase",
-    sport: "Track & Field",
-    date: "July 5 – July 7, 2026",
-    venue: "Maadi Olympic Center, Cairo",
-    prize: "EGP 100,000 + Pro Trials",
-    teamsCount: "250+ Competitors",
-    slotsFilled: 190,
-    totalSlots: 250,
-    status: "Scout Showcase",
-    image:
-      "https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=800&h=500&fit=crop&auto=format",
-  },
-];
-
-const UNIVERSITIES_LIST = [
-  "Cairo University",
-  "American University in Cairo (AUC)",
-  "German University in Cairo (GUC)",
-  "British University in Egypt (BUE)",
-  "Ain Shams University",
-  "Modern Sciences and Arts (MSA)",
-  "Helwan University",
-  "Alexandria University",
-];
 
 export default function LandingPage({
   onEnterApp,
   onSignUpAthlete,
+  onOpenFanHub,
 }: LandingPageProps) {
-  const [sportFilter, setSportFilter] = useState<string>("All");
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [statusTab, setStatusTab] = useState<EventStatusTab>("upcoming")
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
-  // Quick participation form states
-  const [partName, setPartName] = useState("");
-  const [partEmail, setPartEmail] = useState("");
-  const [partRole, setPartRole] = useState("Athlete");
-  const [partUniversity, setPartUniversity] = useState(UNIVERSITIES_LIST[0]);
-  const [partSport, setPartSport] = useState("Football");
-  const [partMessage, setPartMessage] = useState("");
-  const [partSubmitted, setPartSubmitted] = useState(false);
+  // Modals for public viewing
+  const [activeModal, setActiveModal] =
+    useState<"live_match" | "tournament_hub" | null>(null)
+  const [selectedTournament, setSelectedTournament] =
+    useState<TournamentEvent | null>(null)
 
-  const filteredEvents =
-    sportFilter === "All"
-      ? EVENTS
-      : EVENTS.filter((e) => e.sport === sportFilter);
+  // Featured tournament for hero: current/ongoing if available, otherwise upcoming
+  const featuredTournament =
+    TOURNAMENTS.find((t) => t.statusCategory === "live") ||
+    TOURNAMENTS.find((t) => t.statusCategory === "upcoming") ||
+    TOURNAMENTS[0]
 
-  function handleParticipationSubmit(e: FormEvent) {
-    e.preventDefault();
-    setPartSubmitted(true);
-    setTimeout(() => {
-      // Keep feedback visible
-    }, 500);
+  const filteredEvents = TOURNAMENTS.filter(
+    (e) => e.statusCategory === statusTab,
+  )
+
+  function openTournamentHub(event: TournamentEvent) {
+    if (onOpenFanHub) {
+      onOpenFanHub(event.id)
+      return
+    }
+    setSelectedTournament(event)
+    setActiveModal("tournament_hub")
   }
 
-  function scrollToSection(id: string) {
-    setMobileMenuOpen(false);
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
+  function handleNavClick(sectionId: string) {
+    setMobileMenuOpen(false)
+    scrollToElement(sectionId)
   }
 
   return (
-    <div className="min-h-screen w-full bg-[#07080a] text-white selection:bg-volt selection:text-ink font-sans">
-      {/* ---------------- NAVIGATION BAR ---------------- */}
-      <header className="sticky top-0 z-50 border-b border-line/70 bg-ink/90 backdrop-blur-xl transition-all">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
+    <div className="min-h-screen w-full bg-[#07080a] font-sans text-white selection:bg-volt selection:text-ink">
+      {/* ---------------- NAVIGATION HEADER ---------------- */}
+      <header className="sticky top-0 z-40 border-b border-line/70 bg-ink/90 backdrop-blur-xl transition-all">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-8 sm:py-4">
           {/* Logo */}
           <button
-            onClick={() => scrollToSection("home")}
-            className="flex items-center gap-2 text-left"
+            type="button"
+            onClick={() => handleNavClick("home")}
+            className="flex items-center gap-2 text-left cursor-pointer min-h-[44px]"
             aria-label="FNCTN Home"
           >
-            <span className="display text-3xl font-extrabold tracking-tight">
-              FN<span className="text-volt">CTN</span>
-            </span>
-            <span className="hidden rounded-full border border-volt/30 bg-volt/10 px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-widest text-volt sm:inline-block">
-              University League
-            </span>
+            {/* <Logo size="text-2xl sm:text-3xl" subtitle="Collegiate Arena" />           */}
+            <Logo size="text-2xl sm:text-3xl" />
+
           </button>
 
           {/* Desktop Nav Links */}
-          <nav className="hidden items-center gap-8 md:flex">
+          <nav className="hidden items-center gap-7 lg:gap-8 md:flex">
             <button
-              onClick={() => scrollToSection("home")}
-              className="text-sm font-medium text-mute transition hover:text-volt"
+              type="button"
+              onClick={() => handleNavClick("home")}
+              className="text-sm font-medium text-mute transition hover:text-volt cursor-pointer"
             >
               Home
             </button>
             <button
-              onClick={() => scrollToSection("events")}
-              className="text-sm font-medium text-mute transition hover:text-volt"
+              type="button"
+              onClick={() => handleNavClick("events")}
+              className="text-sm font-medium text-mute transition hover:text-volt cursor-pointer"
             >
-              Upcoming Events
+              Upcoming Events &amp; Fan Zone
             </button>
             <button
-              onClick={() => scrollToSection("who-are-we")}
-              className="text-sm font-medium text-mute transition hover:text-volt"
+              type="button"
+              onClick={() => handleNavClick("who-are-we")}
+              className="text-sm font-medium text-mute transition hover:text-volt cursor-pointer"
             >
               Who Are We
             </button>
             <button
-              onClick={() => scrollToSection("participate")}
-              className="text-sm font-medium text-mute transition hover:text-volt"
+              type="button"
+              onClick={() => handleNavClick("participate")}
+              className="text-sm font-medium text-mute transition hover:text-volt cursor-pointer"
             >
               Participate
             </button>
-          </nav>
-
-          {/* Action Buttons */}
-          <div className="hidden items-center gap-3 md:flex">
             <button
-              onClick={onSignUpAthlete}
-              className="rounded-xl border border-volt/50 bg-volt/10 px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider text-volt transition hover:bg-volt hover:text-ink"
+              type="button"
+              onClick={() => handleNavClick("contact")}
+              className="text-sm font-medium text-mute transition hover:text-volt cursor-pointer"
             >
-              Athlete Sign Up
+              Contact Us
             </button>
             <button
-              onClick={onEnterApp}
-              className="flex items-center gap-2 rounded-xl bg-volt px-4 py-2 text-xs font-extrabold uppercase tracking-wider text-ink transition hover:brightness-110 active:scale-95 shadow-md shadow-volt/20"
+              type="button"
+              onClick={() => onOpenFanHub?.()}
+              className="flex items-center gap-1.5 rounded-lg border border-volt/40 bg-volt/10 px-3 py-1 text-xs font-mono font-bold uppercase text-volt hover:bg-volt hover:text-ink transition cursor-pointer"
             >
-              <span>Launch App</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-volt animate-pulse" />
+              <span>Fan Hub</span>
+            </button>
+          </nav>
+
+          {/* Action CTA: Only the yellow button with text 'Athlete Sign Up' */}
+          <div className="hidden items-center gap-3 md:flex">
+            <button
+              type="button"
+              onClick={onSignUpAthlete}
+              className="flex min-h-[40px] items-center gap-2 rounded-xl bg-volt px-5 py-2 text-xs font-extrabold uppercase tracking-wider text-ink transition hover:brightness-110 active:scale-95 shadow-md shadow-volt/20 cursor-pointer"
+            >
+              <span>Athlete Sign Up</span>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+              >
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </button>
           </div>
 
-          {/* Mobile Menu Toggle Button */}
+          {/* Mobile Menu Toggle Button (Accessible touch target >= 44x44) */}
           <button
+            type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-card text-mute md:hidden"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-line bg-card text-mute md:hidden cursor-pointer active:scale-95 transition"
             aria-label="Toggle navigation menu"
           >
             {mobileMenuOpen ? (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 <path d="M18 6L6 18M6 6l12 12" />
               </svg>
             ) : (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 <path d="M3 12h18M3 6h18M3 18h18" />
               </svg>
             )}
           </button>
         </div>
 
-        {/* Mobile Dropdown Menu */}
+        {/* Mobile Dropdown Menu with smooth touch targets */}
         {mobileMenuOpen && (
-          <div className="border-b border-line bg-ink/98 px-6 py-6 md:hidden">
-            <div className="flex flex-col gap-4">
+          <div className="border-b border-line bg-ink/95 px-5 py-6 backdrop-blur-2xl md:hidden animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="flex flex-col gap-1">
               <button
-                onClick={() => scrollToSection("home")}
-                className="text-left text-base font-bold text-white hover:text-volt"
+                type="button"
+                onClick={() => handleNavClick("home")}
+                className="flex min-h-[44px] items-center text-left text-base font-bold text-white hover:text-volt cursor-pointer"
               >
                 Home
               </button>
               <button
-                onClick={() => scrollToSection("events")}
-                className="text-left text-base font-bold text-white hover:text-volt"
+                type="button"
+                onClick={() => handleNavClick("events")}
+                className="flex min-h-[44px] items-center text-left text-base font-bold text-white hover:text-volt cursor-pointer"
               >
-                Upcoming Events
+                Upcoming Events &amp; Fan Zone
               </button>
               <button
-                onClick={() => scrollToSection("who-are-we")}
-                className="text-left text-base font-bold text-white hover:text-volt"
+                type="button"
+                onClick={() => handleNavClick("who-are-we")}
+                className="flex min-h-[44px] items-center text-left text-base font-bold text-white hover:text-volt cursor-pointer"
               >
                 Who Are We
               </button>
               <button
-                onClick={() => scrollToSection("participate")}
-                className="text-left text-base font-bold text-white hover:text-volt"
+                type="button"
+                onClick={() => handleNavClick("participate")}
+                className="flex min-h-[44px] items-center text-left text-base font-bold text-white hover:text-volt cursor-pointer"
               >
                 Participate
               </button>
-              <div className="mt-4 flex flex-col gap-2.5 pt-4 border-t border-line">
+              <button
+                type="button"
+                onClick={() => handleNavClick("contact")}
+                className="flex min-h-[44px] items-center text-left text-base font-bold text-white hover:text-volt cursor-pointer"
+              >
+                Contact Us
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false)
+                  onOpenFanHub?.()
+                }}
+                className="flex min-h-[44px] items-center gap-2 text-left text-base font-bold text-volt cursor-pointer"
+              >
+                <span className="h-2 w-2 rounded-full bg-volt animate-pulse" />
+                <span>Fan Hub (Live &amp; Tickets)</span>
+              </button>
+
+              <div className="mt-4 border-t border-line/80 pt-4">
                 <button
-                  onClick={onSignUpAthlete}
-                  className="w-full rounded-xl border border-volt/50 py-3 text-center font-mono text-xs font-bold uppercase tracking-wider text-volt"
+                  type="button"
+                  onClick={() => {
+                    setMobileMenuOpen(false)
+                    onSignUpAthlete()
+                  }}
+                  className="flex min-h-[46px] w-full items-center justify-center gap-2 rounded-xl bg-volt py-3 text-center text-xs font-black uppercase tracking-wider text-ink shadow-md shadow-volt/20 cursor-pointer active:scale-[0.99]"
                 >
-                  Create Athlete Account
-                </button>
-                <button
-                  onClick={onEnterApp}
-                  className="w-full rounded-xl bg-volt py-3 text-center text-xs font-extrabold uppercase tracking-wider text-ink"
-                >
-                  Open Live Match Portal
+                  <span>Athlete Sign Up</span>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                  >
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
                 </button>
               </div>
             </div>
@@ -257,436 +248,367 @@ export default function LandingPage({
         )}
       </header>
 
-      {/* ---------------- SECTION 1: HOMEPAGE / HERO ---------------- */}
-      <section id="home" className="relative min-h-[90vh] overflow-hidden border-b border-line">
-        {/* Background Stadium Photo & Gradient Mask */}
+      {/* ---------------- SECTION A: HOME (HERO) ---------------- */}
+      <section
+        id="home"
+        className="relative min-h-[80vh] sm:min-h-[85vh] overflow-hidden border-b border-line"
+      >
         <div className="absolute inset-0 z-0">
           <img
             src="/stadium_hero.jpg"
-            alt="Collegiate sports tournament arena"
-            className="h-full w-full object-cover object-center opacity-40 scale-105 transform animate-pulse duration-[10000ms]"
+            alt="Futuristic floodlit university tournament stadium"
+            className="h-full w-full object-cover object-center opacity-30 sm:opacity-35"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#07080a] via-[#07080a]/80 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#07080a] via-transparent to-[#07080a]" />
         </div>
 
-        <div className="relative z-10 mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:py-28">
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
-            {/* Left Headline & CTAs */}
+        <div className="relative z-10 mx-auto max-w-7xl px-4 py-12 sm:px-8 sm:py-20 lg:py-28">
+          <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-12">
             <div className="lg:col-span-7">
-              {/* Season Live Pill */}
-              <div className="inline-flex items-center gap-2 rounded-full border border-volt/40 bg-volt/15 px-3.5 py-1.5 backdrop-blur-md">
-                <span className="h-2 w-2 rounded-full bg-volt animate-ping" />
-                <span className="h-2 w-2 rounded-full bg-volt -ml-4" />
-                <span className="font-mono text-xs font-bold uppercase tracking-widest text-volt">
-                  Spring 2026 Inter-Collegiate Season · Live
+              {/* Collegiate Platform Badge */}
+              <div className="inline-flex items-center gap-2 rounded-full border border-volt/40 bg-volt/15 px-3 py-1 sm:px-3.5 sm:py-1.5 backdrop-blur-md">
+                <span className="h-2 w-2 animate-ping rounded-full bg-volt shrink-0" />
+                <span className="-ml-4 h-2 w-2 rounded-full bg-volt shrink-0" />
+                <span className="font-mono text-[10px] sm:text-xs font-bold uppercase tracking-wider sm:tracking-widest text-volt">
+                  Egyptian Collegiate Sports Platform
                 </span>
               </div>
 
               {/* Main Headline */}
-              <h1 className="display mt-6 text-4xl leading-[0.95] text-white sm:text-6xl lg:text-7xl">
-                WHERE UNIVERSITY <br />
-                <span className="text-volt">CHAMPIONS</span> ARE <br />
-                BORN &amp; SCOUTED
+              <h1 className="display mt-5 sm:mt-6 text-3xl leading-[1.02] text-white sm:text-5xl md:text-6xl lg:text-7xl">
+                WELCOME TO <br />
+                <span className="text-volt">FNCTN</span> SPORTS. <br />
+                COMPETE. SCOUT. WIN.
               </h1>
 
-              <p className="mt-6 max-w-xl text-base leading-relaxed text-mute sm:text-lg">
-                FNCTN is the official digital arena uniting Egypt&apos;s leading universities,
-                high-caliber student athletes, and professional sports scouts. Experience
-                real-time tournament fixtures, live collegiate tables, and verified scout profiles.
+              <p className="mt-4 sm:mt-6 max-w-xl text-sm leading-relaxed text-mute sm:text-base sm:leading-relaxed lg:text-lg">
+                The premier digital home for Egyptian university sports
+                tournaments. Follow live collegiate matches, track tournament
+                fixtures and fan zones, and discover university athletic talent
+                scouted for the pros.
               </p>
 
-              {/* Call to Actions */}
-              <div className="mt-8 flex flex-wrap items-center gap-4">
+              {/* Primary Call to Action Buttons */}
+              <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
                 <button
+                  type="button"
                   onClick={onSignUpAthlete}
-                  className="flex items-center gap-2.5 rounded-xl bg-volt px-6 py-4 text-xs font-extrabold uppercase tracking-widest text-ink transition hover:brightness-110 active:scale-95 shadow-xl shadow-volt/20"
+                  className="flex min-h-[48px] items-center justify-center gap-2.5 rounded-xl bg-volt px-6 py-3.5 text-xs font-black uppercase tracking-widest text-ink transition hover:brightness-110 active:scale-95 shadow-xl shadow-volt/20 cursor-pointer"
                 >
-                  <span>Join as Student Athlete</span>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <span>Get Started — Athlete Sign Up</span>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                  >
                     <path d="M5 12h14M12 5l7 7-7 7" />
                   </svg>
                 </button>
 
                 <button
-                  onClick={() => scrollToSection("participate")}
-                  className="rounded-xl border border-line bg-card/80 px-6 py-4 font-mono text-xs font-bold uppercase tracking-widest text-white backdrop-blur-md transition hover:border-volt hover:text-volt"
+                  type="button"
+                  onClick={() => onOpenFanHub ? onOpenFanHub() : handleNavClick("events")}
+                  className="flex min-h-[48px] items-center justify-center gap-2 rounded-xl border border-volt/50 bg-volt/10 px-6 py-3.5 font-mono text-xs font-bold uppercase tracking-widest text-volt backdrop-blur-md transition hover:bg-volt hover:text-ink cursor-pointer active:scale-95"
                 >
-                  Register University Team
-                </button>
-
-                <button
-                  onClick={onEnterApp}
-                  className="inline-flex items-center gap-2 font-mono text-xs text-mute underline decoration-volt decoration-2 underline-offset-4 hover:text-white"
-                >
-                  <span>Launch Live Mobile Portal →</span>
+                  <span>Follow Live Matches (Fan Hub)</span>
+                  <span className="h-1.5 w-1.5 rounded-full bg-volt animate-ping" />
                 </button>
               </div>
 
-              {/* Trust Indicators / Universities */}
-              <div className="mt-12 border-t border-line/60 pt-6">
-                <p className="font-mono text-[10px] uppercase tracking-widest text-mute">
-                  Competing Delegations &amp; Campus Stadiums
-                </p>
-                <div className="mt-3 flex flex-wrap items-center gap-3">
-                  {["Cairo Univ", "AUC", "GUC", "BUE", "Ain Shams", "MSA", "Helwan"].map((uni) => (
-                    <span
-                      key={uni}
-                      className="rounded-lg border border-line bg-card/60 px-2.5 py-1 font-mono text-xs font-medium text-mute"
-                    >
-                      {uni}
-                    </span>
-                  ))}
-                </div>
+              {/* Quick Tournament Status Indicator */}
+              <div className="mt-5 sm:mt-6 flex flex-wrap items-center gap-2 sm:gap-3 text-xs text-mute">
+                <span className="font-mono text-volt">
+                  {featuredTournament.statusCategory === "live"
+                    ? "🔴 Active Tournament"
+                    : "📅 Next Upcoming Tournament"}
+                </span>
+                <span>·</span>
+                <button
+                  type="button"
+                  onClick={() =>
+                    onOpenFanHub
+                      ? onOpenFanHub(featuredTournament.id)
+                      : openTournamentHub(featuredTournament)
+                  }
+                  className="font-mono text-white underline decoration-volt hover:text-volt cursor-pointer min-h-[36px] flex items-center"
+                >
+                  {featuredTournament.title} →
+                </button>
               </div>
             </div>
 
-            {/* Right Live Fixture Simulation Card */}
+            {/* Hero Current / Upcoming Tournament Showcase Card */}
             <div className="lg:col-span-5">
-              <div className="relative mx-auto max-w-md rounded-3xl border border-line bg-card/90 p-6 shadow-2xl backdrop-blur-2xl">
-                <div className="mb-4 flex items-center justify-between border-b border-line pb-4">
-                  <div className="flex items-center gap-2">
-                    <span className="live-glow inline-flex items-center gap-1.5 rounded-full bg-volt px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase text-ink">
-                      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-ink" />
-                      Live Match
-                    </span>
-                    <span className="font-mono text-xs text-white">67&apos; Minutes</span>
-                  </div>
-                  <span className="font-mono text-[11px] uppercase tracking-wider text-mute">
-                    Football · Group A
+              <div className="relative mx-auto max-w-md overflow-hidden rounded-2xl sm:rounded-3xl border border-line bg-card/90 p-4 sm:p-6 shadow-2xl backdrop-blur-2xl">
+                {/* Top Status Header */}
+                <div className="flex items-center justify-between border-b border-line pb-3 sm:pb-3.5">
+                  <span className="inline-flex items-center gap-1.5 font-mono text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-volt">
+                    {featuredTournament.statusCategory === "live" ? (
+                      <>
+                        <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+                        <span>Current Tournament · Active Now</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>📅 Next Upcoming Tournament</span>
+                      </>
+                    )}
+                  </span>
+                  <span className="rounded bg-ink px-2 py-0.5 font-mono text-[9px] font-bold text-white uppercase">
+                    {featuredTournament.sport}
                   </span>
                 </div>
 
-                {/* Score Grid */}
-                <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 py-4 text-center">
-                  <div className="flex flex-col items-center">
-                    <div className="mb-2 flex h-14 w-14 items-center justify-center rounded-2xl border border-line bg-ink font-mono text-sm font-bold text-white shadow-inner">
-                      CU
+                {/* Tournament Image Banner */}
+                <div className="relative mt-3.5 h-36 w-full overflow-hidden rounded-xl bg-ink">
+                  <img
+                    src={featuredTournament.image}
+                    alt={featuredTournament.title}
+                    className="h-full w-full object-cover opacity-70"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
+                  {featuredTournament.prize && (
+                    <div className="absolute bottom-2 left-2 rounded-md bg-ink/80 px-2 py-0.5 font-mono text-[11px] font-bold text-volt backdrop-blur-md">
+                      🏆 Prize: {featuredTournament.prize}
                     </div>
-                    <span className="display text-lg">Cairo Univ</span>
-                    <span className="font-mono text-[10px] text-mute">Top Scorer (14)</span>
-                  </div>
-
-                  <div>
-                    <div className="font-mono text-5xl font-black tabular-nums tracking-tight">
-                      2<span className="mx-1 text-volt">:</span>1
-                    </div>
-                    <span className="font-mono text-[10px] uppercase text-volt">Second Half</span>
-                  </div>
-
-                  <div className="flex flex-col items-center">
-                    <div className="mb-2 flex h-14 w-14 items-center justify-center rounded-2xl border border-line bg-ink font-mono text-sm font-bold text-white shadow-inner">
-                      AUC
-                    </div>
-                    <span className="display text-lg">AUC</span>
-                    <span className="font-mono text-[10px] text-mute">Defending Champ</span>
+                  )}
+                  <div className="absolute top-2 right-2 rounded-md bg-ink/80 px-2 py-0.5 font-mono text-[10px] text-mute backdrop-blur-md">
+                    {featuredTournament.teamsCount}
                   </div>
                 </div>
 
-                {/* Live Scout Callout */}
-                <div className="mt-4 rounded-xl border border-volt/20 bg-volt/5 p-3.5">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-volt text-ink font-mono text-xs font-bold">
-                        ★
-                      </span>
-                      <span className="text-xs font-bold text-white">Scout Spotlight</span>
+                {/* Tournament Title & Info */}
+                <div className="mt-3.5">
+                  <h3 className="display text-base sm:text-lg text-white">
+                    {featuredTournament.title}
+                  </h3>
+                  <div className="mt-2 space-y-1 text-xs text-mute font-mono">
+                    <div className="flex items-center gap-1.5">
+                      <span>📅</span>
+                      <span>{featuredTournament.date}</span>
                     </div>
-                    <span className="font-mono text-[10px] uppercase text-volt">3 Scouts Watching</span>
+                    <div className="flex items-center gap-1.5">
+                      <span>📍</span>
+                      <span className="truncate">{featuredTournament.venue}</span>
+                    </div>
                   </div>
-                  <p className="mt-1.5 text-xs text-mute">
-                    Omar Hassan (CU #9) recorded top sprint speed of{" "}
-                    <strong className="text-white font-mono">34.2 km/h</strong> with 1 goal &amp; 1 assist.
+                </div>
+
+                {/* Sponsor Showcase Section on Card Body (Similar to Fan Services) */}
+                <div className="mt-3.5 border-t border-line/60 pt-2.5">
+                  <p className="mb-1.5 font-mono text-[10px] uppercase tracking-wider text-mute">
+                    Official Tournament Sponsor:
+                  </p>
+                  <div className="flex items-center gap-2.5 rounded-xl border border-line bg-ink/70 p-2.5">
+                    <span className="flex h-7 px-2.5 items-center justify-center rounded-lg bg-card border border-volt/30 font-mono text-[10px] font-black text-volt shrink-0 shadow-sm">
+                      {featuredTournament.sponsor.badge}
+                    </span>
+                    <div className="min-w-0 flex-1 truncate">
+                      <span className="block font-bold text-white text-xs truncate">
+                        {featuredTournament.sponsor.name}
+                      </span>
+                      <span className="block font-mono text-[10px] text-mute truncate">
+                        {featuredTournament.sponsor.tagline}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Fan Zone Perks */}
+                <div className="mt-3 rounded-xl border border-line/70 bg-ink/70 p-2.5 text-xs">
+                  <p className="mb-1 font-mono text-[9px] uppercase text-volt">
+                    Fan Zone Perks Active:
+                  </p>
+                  <p className="text-[11px] text-white">
+                    🍔 Food Trucks · 🎧 DJ Sets · 🎁 Energy Giveaways
                   </p>
                 </div>
 
-                {/* Interactive Portal Button */}
+                {/* Action CTA */}
                 <button
-                  onClick={onEnterApp}
-                  className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-volt py-3 text-xs font-bold uppercase tracking-wider text-ink transition hover:brightness-110 active:scale-95"
+                  type="button"
+                  onClick={() =>
+                    onOpenFanHub
+                      ? onOpenFanHub(featuredTournament.id)
+                      : openTournamentHub(featuredTournament)
+                  }
+                  className="mt-3.5 flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl bg-volt py-3 text-xs font-black uppercase tracking-wider text-ink transition hover:brightness-110 active:scale-95 shadow-md shadow-volt/20 cursor-pointer"
                 >
-                  <span>Open Live Tournament Scoreboard</span>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
+                  <span>Explore Tournament Hub</span>
+                  <span>→</span>
                 </button>
               </div>
             </div>
           </div>
 
-          {/* Stats Bar */}
-          <div className="mt-16 grid grid-cols-2 gap-4 rounded-2xl border border-line bg-card/60 p-6 backdrop-blur-md sm:grid-cols-4 lg:p-8">
-            <div>
-              <p className="font-mono text-3xl font-black text-volt sm:text-4xl">16+</p>
-              <p className="mt-1 font-mono text-[11px] uppercase tracking-wider text-mute">Universities</p>
-            </div>
-            <div>
-              <p className="font-mono text-3xl font-black text-white sm:text-4xl">2,400+</p>
-              <p className="mt-1 font-mono text-[11px] uppercase tracking-wider text-mute">Student Athletes</p>
-            </div>
-            <div>
-              <p className="font-mono text-3xl font-black text-volt sm:text-4xl">45+</p>
-              <p className="mt-1 font-mono text-[11px] uppercase tracking-wider text-mute">Verified Scouts</p>
-            </div>
-            <div>
-              <p className="font-mono text-3xl font-black text-white sm:text-4xl">EGP 750K</p>
-              <p className="mt-1 font-mono text-[11px] uppercase tracking-wider text-mute">Season Prize Pool</p>
+          {/* Sponsor Showcase Strip */}
+          <div className="mt-10 sm:mt-14 border-t border-line/60 pt-6 sm:pt-8">
+            <p className="mb-4 sm:mb-5 text-center font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-mute">
+              Official Collegiate Tournament Sponsors &amp; Brand Partners
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-12 opacity-80">
+              {CORPORATE_SPONSORS.map((s) => (
+                <div key={s.name} className="flex flex-col items-center">
+                  <span className="font-mono text-xs sm:text-base font-extrabold tracking-widest text-white transition hover:text-volt">
+                    {s.logoText}
+                  </span>
+                  <span className="font-mono text-[8px] sm:text-[9px] uppercase tracking-wider text-mute">
+                    {s.tier}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* ---------------- SECTION 2: UPCOMING EVENTS ---------------- */}
-      <section id="events" className="border-b border-line bg-ink/50 py-20 sm:py-28">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between">
+      {/* ---------------- SECTION B: UPCOMING EVENTS & FAN ZONE ---------------- */}
+      <section
+        id="events"
+        className="border-b border-line bg-ink/60 py-16 sm:py-24"
+      >
+        <div className="mx-auto max-w-7xl px-4 sm:px-8">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
               <span className="font-mono text-xs font-bold uppercase tracking-widest text-volt">
-                Official Tournament Calendar
+                Tournament Hub &amp; Spectator Guide
               </span>
-              <h2 className="display mt-2 text-3xl leading-none text-white sm:text-5xl">
-                UPCOMING EVENTS &amp; CUPS
+              <h2 className="display mt-1.5 text-2xl leading-none text-white sm:text-4xl md:text-5xl">
+                UPCOMING EVENTS &amp; FAN ZONE
               </h2>
+              <p className="mt-2 max-w-xl text-xs text-mute leading-relaxed">
+                Tap any tournament card to view the public Tournament Hub,
+                complete rules, participating teams, and fan zone amenities.
+              </p>
             </div>
 
-            {/* Sport Filter Tabs */}
-            <div className="mt-6 flex flex-wrap gap-2 md:mt-0">
-              {["All", "Football", "Basketball", "Padel", "Track & Field"].map((sport) => (
+            {/* Required 3 Filters: Live, Upcoming, Past — Full width grid on mobile */}
+            <div
+              role="tablist"
+              className="mt-2 grid grid-cols-3 w-full sm:w-auto rounded-xl border border-line bg-card p-1 md:mt-0"
+            >
+              {(["live", "upcoming", "past"] as EventStatusTab[]).map((tab) => (
                 <button
-                  key={sport}
-                  onClick={() => setSportFilter(sport)}
-                  className={`rounded-lg px-3.5 py-1.5 font-mono text-xs font-bold uppercase tracking-wider transition ${
-                    sportFilter === sport
+                  key={tab}
+                  role="tab"
+                  aria-selected={statusTab === tab}
+                  onClick={() => setStatusTab(tab)}
+                  className={`flex min-h-[42px] items-center justify-center gap-1.5 rounded-lg px-3 sm:px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider transition cursor-pointer active:scale-95 ${statusTab === tab
                       ? "bg-volt text-ink shadow-md shadow-volt/20"
-                      : "border border-line bg-card text-mute hover:border-volt/50 hover:text-white"
-                  }`}
+                      : "text-mute hover:text-white"
+                    }`}
                 >
-                  {sport}
+                  {tab === "live" && (
+                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-red-500" />
+                  )}
+                  {tab}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Events Grid */}
-          <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
+          {/* Tournament Cards Grid */}
+          <div className="mt-8 sm:mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
             {filteredEvents.map((evt) => (
-              <div
+              <TournamentCard
                 key={evt.id}
-                className="group relative flex flex-col overflow-hidden rounded-2xl border border-line bg-card transition hover:border-volt/70"
-              >
-                {/* Event Image Banner */}
-                <div className="relative h-48 w-full overflow-hidden bg-ink">
-                  <img
-                    src={evt.image}
-                    alt={evt.title}
-                    className="h-full w-full object-cover opacity-60 transition duration-500 group-hover:scale-105 group-hover:opacity-75"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
-
-                  {/* Badges */}
-                  <div className="absolute left-4 top-4 flex items-center gap-2">
-                    <span className="rounded-md bg-volt px-2.5 py-1 font-mono text-[10px] font-extrabold uppercase text-ink">
-                      {evt.sport}
-                    </span>
-                    <span className="rounded-md border border-line bg-ink/80 px-2 py-1 font-mono text-[10px] uppercase text-white backdrop-blur">
-                      {evt.status}
-                    </span>
-                  </div>
-
-                  <div className="absolute bottom-3 right-4 font-mono text-xs font-bold text-volt">
-                    {evt.prize} Prize
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="flex flex-1 flex-col p-6">
-                  <h3 className="display text-2xl leading-snug text-white transition group-hover:text-volt">
-                    {evt.title}
-                  </h3>
-
-                  <div className="mt-4 space-y-2 border-t border-line/60 pt-4 text-xs text-mute">
-                    <div className="flex items-center gap-2">
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-volt">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                        <line x1="16" y1="2" x2="16" y2="6" />
-                        <line x1="8" y1="2" x2="8" y2="6" />
-                        <line x1="3" y1="10" x2="21" y2="10" />
-                      </svg>
-                      <span>{evt.date}</span>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-volt">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                        <circle cx="12" cy="10" r="3" />
-                      </svg>
-                      <span>{evt.venue}</span>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-volt">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                        <circle cx="9" cy="7" r="4" />
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                      </svg>
-                      <span>{evt.teamsCount}</span>
-                    </div>
-                  </div>
-
-                  {/* Registration Progress */}
-                  <div className="mt-5 border-t border-line/60 pt-4">
-                    <div className="flex justify-between font-mono text-[10px] text-mute mb-1.5">
-                      <span>Roster Registration</span>
-                      <span className="text-white font-bold">{evt.slotsFilled} of {evt.totalSlots} Slots Filled</span>
-                    </div>
-                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-ink">
-                      <div
-                        className="h-full bg-volt"
-                        style={{ width: `${(evt.slotsFilled / evt.totalSlots) * 100}%` }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Action */}
-                  <div className="mt-6 flex items-center gap-3">
-                    <button
-                      onClick={() => scrollToSection("participate")}
-                      className="flex-1 rounded-xl bg-volt py-3 text-center text-xs font-extrabold uppercase tracking-widest text-ink transition hover:brightness-110 active:scale-95"
-                    >
-                      Register Team / Compete
-                    </button>
-                    <button
-                      onClick={onEnterApp}
-                      className="rounded-xl border border-line bg-ink px-4 py-3 font-mono text-xs text-mute hover:border-volt hover:text-white transition"
-                    >
-                      Standings
-                    </button>
-                  </div>
-                </div>
-              </div>
+                event={evt}
+                onSelect={openTournamentHub}
+              />
             ))}
           </div>
         </div>
       </section>
 
-      {/* ---------------- SECTION 3: WHO ARE WE ---------------- */}
-      <section id="who-are-we" className="border-b border-line bg-[#07080a] py-20 sm:py-28">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8">
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
-            {/* Story & Philosophy */}
+      {/* ---------------- SECTION C: WHO ARE WE ---------------- */}
+      <section
+        id="who-are-we"
+        className="border-b border-line bg-[#07080a] py-16 sm:py-24"
+      >
+        <div className="mx-auto max-w-7xl px-4 sm:px-8">
+          <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-12">
             <div className="lg:col-span-6">
               <span className="font-mono text-xs font-bold uppercase tracking-widest text-volt">
-                Who Are We
+                About FNCTN
               </span>
-              <h2 className="display mt-2 text-3xl leading-none text-white sm:text-5xl">
-                WE REVOLUTIONIZE <br />
-                <span className="text-volt">UNIVERSITY SPORTS</span>
+              <h2 className="display mt-2 text-2xl leading-none text-white sm:text-4xl md:text-5xl">
+                OUR MISSION FOR <br />
+                <span className="text-volt">EGYPTIAN UNIVERSITY SPORTS</span>
               </h2>
 
-              <p className="mt-6 text-base leading-relaxed text-mute">
-                Every weekend across Egyptian university campuses, thousands of extraordinary
-                athletes compete in fiercely competitive football, basketball, and padel matches.
-                Yet for years, their talent remained invisible to professional leagues, scouts, and
-                even neighboring institutions.
+              <p className="mt-4 sm:mt-6 text-sm sm:text-base leading-relaxed text-mute">
+                FNCTN was founded with a single mission: to professionalize,
+                elevate, and celebrate collegiate athletics across Egypt.
+                Thousands of gifted student-athletes compete across campuses
+                every week without centralized tracking, televised broadcast, or
+                scouting access.
               </p>
 
-              <p className="mt-4 text-base leading-relaxed text-mute">
-                <strong className="text-white">FNCTN</strong> was built to transform collegiate
-                athletics into a world-class, professionalized ecosystem. We provide the digital
-                tournament infrastructure, certified referee scoring, real-time live standings,
-                and scout discovery tools that turn collegiate champions into professional recruits.
+              <p className="mt-3 sm:mt-4 text-sm sm:text-base leading-relaxed text-mute">
+                We bridge this gap with an all-in-one digital tournament engine.
+                We empower universities with institutional ranking points,
+                furnish fans with real-time match fixtures and vibrant fan
+                zones, and provide student-athletes with verified stats seen
+                directly by professional football, basketball, and padel scouts.
               </p>
 
-              {/* Mission Points */}
-              <div className="mt-8 space-y-4">
-                <div className="flex items-start gap-3.5">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-volt/15 font-mono text-xs font-bold text-volt flex-shrink-0">
-                    01
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-bold text-white">Centralized League Infrastructure</h4>
-                    <p className="text-xs text-mute mt-0.5">
-                      Unified scheduling, automated institutional total points, and digital match verification.
-                    </p>
-                  </div>
+              {/* 3 Pillars */}
+              <div className="mt-6 sm:mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
+                <div className="rounded-xl border border-line bg-card p-4">
+                  <p className="font-mono text-2xl font-bold text-volt">16+</p>
+                  <p className="mt-1 text-xs font-bold text-white">
+                    Universities
+                  </p>
+                  <p className="mt-0.5 text-[11px] text-mute">
+                    Unified league standings
+                  </p>
                 </div>
-
-                <div className="flex items-start gap-3.5">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-volt/15 font-mono text-xs font-bold text-volt flex-shrink-0">
-                    02
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-bold text-white">Verified Athlete Profiles &amp; Analytics</h4>
-                    <p className="text-xs text-mute mt-0.5">
-                      Transparent tracking of speed, assists, goals, MVP ballots, and match video reels.
-                    </p>
-                  </div>
+                <div className="rounded-xl border border-line bg-card p-4">
+                  <p className="font-mono text-2xl font-bold text-volt">
+                    2,500+
+                  </p>
+                  <p className="mt-1 text-xs font-bold text-white">Athletes</p>
+                  <p className="mt-0.5 text-[11px] text-mute">
+                    Verified competition IDs
+                  </p>
                 </div>
-
-                <div className="flex items-start gap-3.5">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-volt/15 font-mono text-xs font-bold text-volt flex-shrink-0">
-                    03
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-bold text-white">Direct Professional Scouting Pipeline</h4>
-                    <p className="text-xs text-mute mt-0.5">
-                      Connecting premier sports clubs, academy scouts, and sporting directors directly with collegiate talent.
-                    </p>
-                  </div>
+                <div className="rounded-xl border border-line bg-card p-4">
+                  <p className="font-mono text-2xl font-bold text-volt">45+</p>
+                  <p className="mt-1 text-xs font-bold text-white">Scouts</p>
+                  <p className="mt-0.5 text-[11px] text-mute">
+                    Direct scouting trials
+                  </p>
                 </div>
               </div>
             </div>
 
-            {/* Visual Pillars & Quote */}
             <div className="lg:col-span-6">
               <div className="space-y-4">
-                <div className="rounded-2xl border border-line bg-card p-6 transition hover:border-volt/60">
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-volt text-ink font-bold">
-                      🏆
-                    </span>
-                    <div>
-                      <h3 className="display text-xl">The Institutional Trophy</h3>
-                      <p className="text-xs text-mute">Annual cup contested across 16 universities</p>
-                    </div>
-                  </div>
-                  <p className="mt-3 text-xs leading-relaxed text-mute">
-                    Universities earn aggregate points from all participating sports disciplines.
-                    At the end of the Spring Season, the top university hoists the official Egyptian
-                    Collegiate Athletic Championship Cup.
+                <div className="rounded-2xl border border-volt/30 bg-volt/10 p-5 sm:p-6">
+                  <h3 className="display text-xl sm:text-2xl text-white">
+                    Why University Athletics Matter
+                  </h3>
+                  <p className="mt-2 text-xs sm:text-sm leading-relaxed text-mute">
+                    In premier sporting nations, collegiate leagues are the
+                    bedrock of national teams and pro drafts. FNCTN is
+                    establishing that exact pipeline right here in Egypt,
+                    combining academic prestige with championship athletics.
                   </p>
                 </div>
 
-                <div className="rounded-2xl border border-line bg-card p-6 transition hover:border-volt/60">
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-volt text-ink font-bold">
-                      ⚡
-                    </span>
-                    <div>
-                      <h3 className="display text-xl">High-Performance Scouting</h3>
-                      <p className="text-xs text-mute">Over 45 accredited regional and national scouts</p>
-                    </div>
-                  </div>
-                  <p className="mt-3 text-xs leading-relaxed text-mute">
-                    Every fixture is recorded and analyzed. Scouts filter through verified sprint speeds,
-                    shot conversions, and academic standing to find student athletes ready for pro contracts.
+                <div className="rounded-2xl border border-line bg-card p-5 sm:p-6">
+                  <h4 className="font-mono text-xs font-bold uppercase tracking-wider text-volt">
+                    Verified Digital Scorekeeping
+                  </h4>
+                  <p className="mt-1 text-xs sm:text-sm leading-relaxed text-mute">
+                    Pitch-side tournament officials utilize official controllers
+                    to log points, fouls, and match outcomes in real time,
+                    synchronizing directly with our public fan portal.
                   </p>
-                </div>
-
-                {/* Athlete Quote */}
-                <div className="rounded-2xl border border-volt/30 bg-volt/10 p-6">
-                  <p className="text-sm italic leading-relaxed text-white">
-                    &ldquo;Before FNCTN, university matches felt isolated. Now, every goal is tracked,
-                    our fans follow the live app from campus, and scouts are in the stands every Saturday.&rdquo;
-                  </p>
-                  <div className="mt-4 flex items-center justify-between border-t border-volt/20 pt-3">
-                    <div>
-                      <p className="text-xs font-bold text-white">Omar Hassan</p>
-                      <p className="font-mono text-[10px] text-volt uppercase">Cairo University · Striker</p>
-                    </div>
-                    <span className="font-mono text-[10px] text-mute">Season 25 MVP</span>
-                  </div>
                 </div>
               </div>
             </div>
@@ -694,288 +616,218 @@ export default function LandingPage({
         </div>
       </section>
 
-      {/* ---------------- SECTION 4: PARTICIPATE ---------------- */}
-      <section id="participate" className="border-b border-line bg-ink/70 py-20 sm:py-28">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+      {/* ---------------- SECTION D: PARTICIPATE (4 Steps) ---------------- */}
+      <section
+        id="participate"
+        className="border-b border-line bg-ink/80 py-16 sm:py-24"
+      >
+        <div className="mx-auto max-w-7xl px-4 sm:px-8">
           <div className="text-center">
             <span className="font-mono text-xs font-bold uppercase tracking-widest text-volt">
-              Get In The Game
+              Participate
             </span>
-            <h2 className="display mt-2 text-3xl leading-none text-white sm:text-5xl">
-              HOW TO PARTICIPATE
+            <h2 className="display mt-1.5 text-2xl sm:text-4xl md:text-5xl leading-none text-white">
+              FOUR SIMPLE STEPS TO COMPETE
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-mute">
-              Whether you are an aspiring student athlete, a university sports director, or a
-              professional talent scout, FNCTN has a designated pathway for you.
+            <p className="mx-auto mt-2.5 max-w-xl text-xs sm:text-sm leading-relaxed text-mute">
+              Follow these simple steps to claim your spot in upcoming
+              university tournaments, get your player pass verified, and take
+              the field.
             </p>
           </div>
 
-          {/* 3 Pathway Cards */}
-          <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
-            {/* Pathway 1 */}
-            <div className="flex flex-col justify-between rounded-2xl border border-line bg-card p-6 transition hover:border-volt">
+          {/* 4 Steps Grid */}
+          <div className="mt-10 sm:mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-6">
+            {/* Step 1 */}
+            <div className="relative flex flex-col justify-between rounded-2xl border border-line bg-card p-5 sm:p-6 transition hover:border-volt/80">
               <div>
-                <span className="inline-block rounded-lg bg-volt/15 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-volt">
-                  For Student Athletes
+                <span className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-xl bg-volt font-mono text-base sm:text-lg font-black text-ink">
+                  01
                 </span>
-                <h3 className="display mt-4 text-2xl">Compete &amp; Get Scouted</h3>
-                <p className="mt-3 text-xs leading-relaxed text-mute">
-                  Register your athlete profile, select your sports, connect with your university team
-                  or join as an independent competitor. Track your live match statistics and build a
-                  verified profile for professional scouts.
+                <h3 className="display mt-4 sm:mt-5 text-xl sm:text-2xl text-white">
+                  Create Account
+                </h3>
+                <p className="mt-2 text-xs leading-relaxed text-mute">
+                  Register your student athlete account with your name,
+                  university email, and password.
                 </p>
               </div>
-              <button
-                onClick={onSignUpAthlete}
-                className="mt-6 w-full rounded-xl bg-volt py-3 text-xs font-extrabold uppercase tracking-widest text-ink transition hover:brightness-110 active:scale-95"
-              >
-                Create Athlete Account
-              </button>
+              <div className="mt-5 font-mono text-[10px] uppercase text-volt">
+                ✓ Takes under 1 minute
+              </div>
             </div>
 
-            {/* Pathway 2 */}
-            <div className="flex flex-col justify-between rounded-2xl border border-line bg-card p-6 transition hover:border-volt">
+            {/* Step 2 */}
+            <div className="relative flex flex-col justify-between rounded-2xl border border-line bg-card p-5 sm:p-6 transition hover:border-volt/80">
               <div>
-                <span className="inline-block rounded-lg bg-volt/15 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-volt">
-                  For Universities
+                <span className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-xl bg-volt font-mono text-base sm:text-lg font-black text-ink">
+                  02
                 </span>
-                <h3 className="display mt-4 text-2xl">Register Delegation</h3>
-                <p className="mt-3 text-xs leading-relaxed text-mute">
-                  Enroll your university sports delegation in upcoming tournament cups. Manage team
-                  rosters, access official fixture calendars, and compete for institutional points in
-                  the national collegiate leaderboard.
+                <h3 className="display mt-4 sm:mt-5 text-xl sm:text-2xl text-white">
+                  Upload ID
+                </h3>
+                <p className="mt-2 text-xs leading-relaxed text-mute">
+                  Upload a photo of your official University Student ID and
+                  National ID for tournament verification.
                 </p>
               </div>
-              <button
-                onClick={() => {
-                  setPartRole("University Official");
-                  const formEl = document.getElementById("participation-form");
-                  if (formEl) formEl.scrollIntoView({ behavior: "smooth" });
-                }}
-                className="mt-6 w-full rounded-xl border border-line bg-ink py-3 text-xs font-bold uppercase tracking-widest text-white transition hover:border-volt hover:text-volt"
-              >
-                Enroll University Team
-              </button>
+              <div className="mt-5 font-mono text-[10px] uppercase text-volt">
+                ✓ Eligibility guaranteed
+              </div>
             </div>
 
-            {/* Pathway 3 */}
-            <div className="flex flex-col justify-between rounded-2xl border border-line bg-card p-6 transition hover:border-volt">
+            {/* Step 3 */}
+            <div className="relative flex flex-col justify-between rounded-2xl border border-line bg-card p-5 sm:p-6 transition hover:border-volt/80">
               <div>
-                <span className="inline-block rounded-lg bg-volt/15 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-volt">
-                  For Scouts &amp; Clubs
+                <span className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-xl bg-volt font-mono text-base sm:text-lg font-black text-ink">
+                  03
                 </span>
-                <h3 className="display mt-4 text-2xl">Apply for Scout Access</h3>
-                <p className="mt-3 text-xs leading-relaxed text-mute">
-                  Gain certified access to the FNCTN Scouting Portal. Review performance metrics,
-                  scout reports, sprint and match telemetry, and contact eligible university players
-                  directly for trials.
+                <h3 className="display mt-4 sm:mt-5 text-xl sm:text-2xl text-white">
+                  Form Team
+                </h3>
+                <p className="mt-2 text-xs leading-relaxed text-mute">
+                  Create a new university roster or join your existing campus
+                  team instantly with a 6-character code.
                 </p>
               </div>
-              <button
-                onClick={() => {
-                  setPartRole("Scout / Club Representative");
-                  const formEl = document.getElementById("participation-form");
-                  if (formEl) formEl.scrollIntoView({ behavior: "smooth" });
-                }}
-                className="mt-6 w-full rounded-xl border border-line bg-ink py-3 text-xs font-bold uppercase tracking-widest text-white transition hover:border-volt hover:text-volt"
-              >
-                Request Scout Credentials
-              </button>
+              <div className="mt-5 font-mono text-[10px] uppercase text-volt">
+                ✓ 6-Character Invite Code
+              </div>
+            </div>
+
+            {/* Step 4 */}
+            <div className="relative flex flex-col justify-between rounded-2xl border border-line bg-card p-5 sm:p-6 transition hover:border-volt/80">
+              <div>
+                <span className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-xl bg-volt font-mono text-base sm:text-lg font-black text-ink">
+                  04
+                </span>
+                <h3 className="display mt-4 sm:mt-5 text-xl sm:text-2xl text-white">
+                  Play
+                </h3>
+                <p className="mt-2 text-xs leading-relaxed text-mute">
+                  Compete in official stadium fixtures, log your stats, and
+                  build your verified scouting portfolio.
+                </p>
+              </div>
+              <div className="mt-5 font-mono text-[10px] uppercase text-volt">
+                ✓ Live on FNCTN Arena
+              </div>
             </div>
           </div>
 
-          {/* Interactive Participation Request Form */}
-          <div id="participation-form" className="mt-16 rounded-3xl border border-line bg-card p-8 sm:p-12">
-            <div className="max-w-2xl">
-              <span className="font-mono text-xs font-bold uppercase tracking-widest text-volt">
-                Quick Registration
-              </span>
-              <h3 className="display mt-2 text-3xl">SEND A PARTICIPATION INQUIRY</h3>
-              <p className="mt-2 text-xs leading-relaxed text-mute">
-                Submit your delegation or individual details below. Our tournament director will
-                reach out within 24 hours with tournament schedules and registration guidelines.
-              </p>
-            </div>
-
-            {partSubmitted ? (
-              <div className="mt-8 rounded-2xl border border-volt/50 bg-volt/15 p-6 text-center">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-volt text-ink font-bold text-xl mb-3">
-                  ✓
-                </div>
-                <h4 className="display text-2xl text-white">Inquiry Received!</h4>
-                <p className="mt-2 text-sm text-mute">
-                  Thank you, <strong className="text-white">{partName}</strong>. We have registered your inquiry
-                  as a <strong className="text-volt">{partRole}</strong> for {partUniversity}. Our tournament
-                  operations staff will email you with registration packages shortly.
-                </p>
-                <div className="mt-5 flex justify-center gap-3">
-                  <button
-                    onClick={onSignUpAthlete}
-                    className="rounded-xl bg-volt px-5 py-2.5 text-xs font-extrabold uppercase tracking-wider text-ink"
-                  >
-                    Proceed to Athlete Sign Up
-                  </button>
-                  <button
-                    onClick={() => setPartSubmitted(false)}
-                    className="rounded-xl border border-line bg-ink px-4 py-2.5 text-xs font-mono text-mute hover:text-white"
-                  >
-                    Send Another Inquiry
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <form onSubmit={handleParticipationSubmit} className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <label className="block">
-                  <span className="mb-1.5 block font-mono text-[10px] uppercase tracking-widest text-mute">
-                    Your Full Name
-                  </span>
-                  <input
-                    type="text"
-                    required
-                    value={partName}
-                    onChange={(e) => setPartName(e.target.value)}
-                    placeholder="e.g. Dr. Ahmed Tarek / Karim Salah"
-                    className="w-full rounded-xl border border-line bg-ink px-3.5 py-3 text-sm text-white outline-none transition focus:border-volt"
-                  />
-                </label>
-
-                <label className="block">
-                  <span className="mb-1.5 block font-mono text-[10px] uppercase tracking-widest text-mute">
-                    Official Email
-                  </span>
-                  <input
-                    type="email"
-                    required
-                    value={partEmail}
-                    onChange={(e) => setPartEmail(e.target.value)}
-                    placeholder="contact@university.edu.eg"
-                    className="w-full rounded-xl border border-line bg-ink px-3.5 py-3 text-sm text-white outline-none transition focus:border-volt"
-                  />
-                </label>
-
-                <label className="block">
-                  <span className="mb-1.5 block font-mono text-[10px] uppercase tracking-widest text-mute">
-                    Participation Role
-                  </span>
-                  <select
-                    value={partRole}
-                    onChange={(e) => setPartRole(e.target.value)}
-                    className="w-full appearance-none rounded-xl border border-line bg-ink px-3.5 py-3 text-sm text-white outline-none transition focus:border-volt"
-                  >
-                    <option value="Athlete">Student Athlete (Individual / Team)</option>
-                    <option value="University Official">University Sports Official / Coach</option>
-                    <option value="Scout / Club Representative">Professional Scout / Club</option>
-                    <option value="Sponsor / Partner">Corporate Sponsor / Brand</option>
-                  </select>
-                </label>
-
-                <label className="block">
-                  <span className="mb-1.5 block font-mono text-[10px] uppercase tracking-widest text-mute">
-                    University / Organization
-                  </span>
-                  <select
-                    value={partUniversity}
-                    onChange={(e) => setPartUniversity(e.target.value)}
-                    className="w-full appearance-none rounded-xl border border-line bg-ink px-3.5 py-3 text-sm text-white outline-none transition focus:border-volt"
-                  >
-                    {UNIVERSITIES_LIST.map((u) => (
-                      <option key={u} value={u}>
-                        {u}
-                      </option>
-                    ))}
-                    <option value="Independent / Other">Other / Independent Club</option>
-                  </select>
-                </label>
-
-                <label className="block sm:col-span-2">
-                  <span className="mb-1.5 block font-mono text-[10px] uppercase tracking-widest text-mute">
-                    Sport Discipline
-                  </span>
-                  <div className="flex flex-wrap gap-2">
-                    {["Football", "Basketball", "Padel", "Tennis", "Track & Field"].map((sp) => (
-                      <button
-                        key={sp}
-                        type="button"
-                        onClick={() => setPartSport(sp)}
-                        className={`rounded-lg px-3 py-1.5 font-mono text-xs font-bold transition ${
-                          partSport === sp
-                            ? "bg-volt text-ink"
-                            : "border border-line bg-ink text-mute hover:border-volt/50"
-                        }`}
-                      >
-                        {sp}
-                      </button>
-                    ))}
-                  </div>
-                </label>
-
-                <label className="block sm:col-span-2">
-                  <span className="mb-1.5 block font-mono text-[10px] uppercase tracking-widest text-mute">
-                    Notes or Questions (Optional)
-                  </span>
-                  <textarea
-                    rows={3}
-                    value={partMessage}
-                    onChange={(e) => setPartMessage(e.target.value)}
-                    placeholder="Tell us about your team size, division, or specific tournament inquiry..."
-                    className="w-full rounded-xl border border-line bg-ink px-3.5 py-3 text-sm text-white outline-none transition focus:border-volt resize-none"
-                  />
-                </label>
-
-                <div className="sm:col-span-2">
-                  <button
-                    type="submit"
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-volt py-3.5 text-xs font-extrabold uppercase tracking-widest text-ink transition hover:brightness-110 active:scale-95"
-                  >
-                    <span>Submit Participation Inquiry</span>
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
-                  </button>
-                </div>
-              </form>
-            )}
+          {/* Large Sign Up Now Interaction Button */}
+          <div className="mt-10 sm:mt-14 flex flex-col items-center justify-center gap-4 text-center">
+            <button
+              type="button"
+              onClick={onSignUpAthlete}
+              className="flex min-h-[52px] w-full max-w-sm items-center justify-center gap-3 rounded-2xl bg-volt px-8 py-4 text-xs sm:text-sm font-black uppercase tracking-widest text-ink transition hover:brightness-110 active:scale-95 shadow-2xl shadow-volt/30 cursor-pointer"
+            >
+              <span>Sign Up Now</span>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </button>
+            <p className="font-mono text-xs text-mute">
+              Already have an athlete account?{" "}
+              <button
+                type="button"
+                onClick={onEnterApp}
+                className="font-bold text-white underline decoration-volt decoration-2 underline-offset-4 hover:text-volt cursor-pointer py-1 inline-block"
+              >
+                Log In to Athlete Dashboard
+              </button>
+            </p>
           </div>
         </div>
       </section>
 
+      {/* ---------------- SECTION E: CONTACT US ---------------- */}
+      <ContactSection />
+
       {/* ---------------- FOOTER ---------------- */}
-      <footer className="border-t border-line bg-ink py-12">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+      <footer className="border-t border-line bg-ink py-10 sm:py-12">
+        <div className="mx-auto max-w-7xl px-4 sm:px-8">
           <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
             <div className="flex items-center gap-3">
-              <span className="display text-3xl">
-                FN<span className="text-volt">CTN</span>
-              </span>
+              <Logo size="text-2xl sm:text-3xl" />
               <span className="border-l border-line pl-3 text-xs text-mute">
-                The Collegiate Athletic Network
+                Egyptian University Sports Network
               </span>
             </div>
 
-            <div className="flex flex-wrap items-center justify-center gap-6 font-mono text-xs text-mute">
-              <button onClick={() => scrollToSection("home")} className="hover:text-volt">
+            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 font-mono text-xs text-mute">
+              <button
+                type="button"
+                onClick={() => handleNavClick("home")}
+                className="hover:text-volt cursor-pointer min-h-[40px] flex items-center"
+              >
                 Home
               </button>
-              <button onClick={() => scrollToSection("events")} className="hover:text-volt">
-                Events
+              <button
+                type="button"
+                onClick={() => handleNavClick("events")}
+                className="hover:text-volt cursor-pointer min-h-[40px] flex items-center"
+              >
+                Events &amp; Fan Zone
               </button>
-              <button onClick={() => scrollToSection("who-are-we")} className="hover:text-volt">
+              <button
+                type="button"
+                onClick={() => handleNavClick("who-are-we")}
+                className="hover:text-volt cursor-pointer min-h-[40px] flex items-center"
+              >
                 Who Are We
               </button>
-              <button onClick={() => scrollToSection("participate")} className="hover:text-volt">
+              <button
+                type="button"
+                onClick={() => handleNavClick("participate")}
+                className="hover:text-volt cursor-pointer min-h-[40px] flex items-center"
+              >
                 Participate
               </button>
-              <button onClick={onEnterApp} className="text-volt underline decoration-volt underline-offset-4">
-                Tournament App
+              <button
+                type="button"
+                onClick={() => handleNavClick("contact")}
+                className="hover:text-volt cursor-pointer min-h-[40px] flex items-center"
+              >
+                Contact Us
+              </button>
+              <button
+                type="button"
+                onClick={onEnterApp}
+                className="text-volt underline decoration-volt underline-offset-4 cursor-pointer min-h-[40px] flex items-center"
+              >
+                Live App Portal
               </button>
             </div>
 
-            <div className="font-mono text-xs text-mute/60">
-              &copy; {new Date().getFullYear()} FNCTN Sports League. All rights reserved.
+            <div className="font-mono text-xs text-mute/60 text-center">
+              &copy; {new Date().getFullYear()} FNCTN. Public Fan &amp;
+              Tournament Site.
             </div>
           </div>
         </div>
       </footer>
+
+      {/* ---------------- PUBLIC MODALS ---------------- */}
+      <LiveMatchModal
+        isOpen={activeModal === "live_match"}
+        onClose={() => setActiveModal(null)}
+        onSignUpAthlete={onSignUpAthlete}
+      />
+
+      <TournamentHubModal
+        isOpen={activeModal === "tournament_hub"}
+        event={selectedTournament}
+        onClose={() => setActiveModal(null)}
+        onSignUpAthlete={onSignUpAthlete}
+      />
     </div>
-  );
+  )
 }

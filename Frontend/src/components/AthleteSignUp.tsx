@@ -1,55 +1,51 @@
-import { useState, type FormEvent } from "react";
-import { registerAthlete } from "../services/auth";
+import { useState, type FormEvent } from "react"
+import { registerAthlete } from "../services/auth"
+import { validateAthleteSignUp } from "../utils/validation"
 
 interface AthleteSignUpProps {
-  onNavigateToLogin: () => void;
+  onNavigateToLogin: () => void
   onSuccess: (info: {
-    email: string;
-    fullName: string;
-    firstName: string;
-    familyName: string;
-  }) => void;
+    email: string
+    fullName: string
+    firstName: string
+    familyName: string
+  }) => void
 }
 
 export default function AthleteSignUp({
   onNavigateToLogin,
   onSuccess,
 }: AthleteSignUpProps) {
-  const [firstName, setFirstName] = useState("");
-  const [familyName, setFamilyName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [firstName, setFirstName] = useState("")
+  const [familyName, setFamilyName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
 
-  const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
-  const isPasswordValid = password.length >= 8;
+  const isPasswordValid = password.length >= 8
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setErrorMessage(null);
+    e.preventDefault()
+    setErrorMessage(null)
 
-    // Client-side validations
-    if (!firstName.trim()) {
-      setErrorMessage("Please enter your first name.");
-      return;
-    }
-    if (!familyName.trim()) {
-      setErrorMessage("Please enter your family name.");
-      return;
-    }
-    if (!email.trim() || !email.includes("@")) {
-      setErrorMessage("Please enter a valid university or personal email.");
-      return;
-    }
-    if (!isPasswordValid) {
-      setErrorMessage("Password must be at least 8 characters long.");
-      return;
+    // Validate using utility function
+    const validation = validateAthleteSignUp({
+      firstName,
+      familyName,
+      email,
+      password,
+    })
+
+    if (!validation.valid) {
+      setErrorMessage(validation.error || "Please check your inputs.")
+      return
     }
 
-    setLoading(true);
+    setLoading(true)
 
     try {
       const result = await registerAthlete({
@@ -57,11 +53,11 @@ export default function AthleteSignUp({
         familyName,
         email,
         password,
-      });
+      })
 
       setSuccessMessage(
-        `Welcome aboard, ${result.full_name}! Setting up your questionnaire...`
-      );
+        `Welcome aboard, ${result.full_name}! Setting up your questionnaire...`,
+      )
 
       setTimeout(() => {
         onSuccess({
@@ -69,27 +65,27 @@ export default function AthleteSignUp({
           fullName: result.full_name,
           firstName: firstName.trim(),
           familyName: familyName.trim(),
-        });
-      }, 1000);
+        })
+      }, 1000)
     } catch (err: unknown) {
       if (err instanceof Error) {
-        setErrorMessage(err.message);
+        setErrorMessage(err.message)
       } else {
-        setErrorMessage("An unexpected error occurred. Please try again.");
+        setErrorMessage("An unexpected error occurred. Please try again.")
       }
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   }
 
   return (
-    <div className="relative flex h-full flex-col overflow-y-auto px-6 py-6 no-scrollbar sm:px-8">
+    <div className="relative flex h-full flex-col overflow-y-auto px-5 py-6 sm:px-8 no-scrollbar">
       {/* Header bar */}
       <div className="mb-6 flex items-center justify-between">
         <button
           type="button"
           onClick={onNavigateToLogin}
-          className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-wider text-mute transition hover:text-volt"
+          className="inline-flex min-h-[44px] items-center gap-1.5 font-mono text-xs uppercase tracking-wider text-mute transition hover:text-volt cursor-pointer"
           aria-label="Back to Log In"
         >
           <svg
@@ -133,7 +129,7 @@ export default function AthleteSignUp({
         >
           <div className="flex items-center gap-2">
             <svg
-              className="h-5 w-5 text-volt flex-shrink-0"
+              className="h-5 w-5 text-volt shrink-0"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -159,7 +155,7 @@ export default function AthleteSignUp({
         >
           <div className="flex items-start gap-2">
             <svg
-              className="mt-0.5 h-4 w-4 text-red-400 flex-shrink-0"
+              className="mt-0.5 h-4 w-4 text-red-400 shrink-0"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -191,7 +187,7 @@ export default function AthleteSignUp({
               onChange={(e) => setFirstName(e.target.value)}
               placeholder="e.g. Omar"
               disabled={loading || Boolean(successMessage)}
-              className="w-full rounded-xl border border-line bg-card px-3.5 py-3 text-[14px] text-white outline-none transition placeholder:text-mute/50 focus:border-volt focus:ring-1 focus:ring-volt/40 disabled:opacity-50"
+              className="w-full min-h-[46px] rounded-xl border border-line bg-card px-4 py-3 text-base sm:text-sm text-white outline-none transition placeholder:text-mute/50 focus:border-volt focus:ring-1 focus:ring-volt/40 disabled:opacity-50"
             />
           </label>
 
@@ -208,7 +204,7 @@ export default function AthleteSignUp({
               onChange={(e) => setFamilyName(e.target.value)}
               placeholder="e.g. Hassan"
               disabled={loading || Boolean(successMessage)}
-              className="w-full rounded-xl border border-line bg-card px-3.5 py-3 text-[14px] text-white outline-none transition placeholder:text-mute/50 focus:border-volt focus:ring-1 focus:ring-volt/40 disabled:opacity-50"
+              className="w-full min-h-[46px] rounded-xl border border-line bg-card px-4 py-3 text-base sm:text-sm text-white outline-none transition placeholder:text-mute/50 focus:border-volt focus:ring-1 focus:ring-volt/40 disabled:opacity-50"
             />
           </label>
         </div>
@@ -227,7 +223,7 @@ export default function AthleteSignUp({
             onChange={(e) => setEmail(e.target.value)}
             placeholder="athlete@university.edu.eg"
             disabled={loading || Boolean(successMessage)}
-            className="w-full rounded-xl border border-line bg-card px-3.5 py-3 text-[14px] text-white outline-none transition placeholder:text-mute/50 focus:border-volt focus:ring-1 focus:ring-volt/40 disabled:opacity-50"
+            className="w-full min-h-[46px] rounded-xl border border-line bg-card px-4 py-3 text-base sm:text-sm text-white outline-none transition placeholder:text-mute/50 focus:border-volt focus:ring-1 focus:ring-volt/40 disabled:opacity-50"
           />
         </label>
 
@@ -242,15 +238,15 @@ export default function AthleteSignUp({
                 password.length === 0
                   ? "text-mute"
                   : isPasswordValid
-                  ? "text-volt"
-                  : "text-amber-400"
+                    ? "text-volt"
+                    : "text-amber-400"
               }`}
             >
               {password.length === 0
                 ? "Min 8 characters"
                 : isPasswordValid
-                ? "✓ 8+ chars"
-                : `${password.length}/8 chars`}
+                  ? "✓ 8+ chars"
+                  : `${password.length}/8 chars`}
             </span>
           </div>
           <div className="relative">
@@ -263,13 +259,13 @@ export default function AthleteSignUp({
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••••••"
               disabled={loading || Boolean(successMessage)}
-              className="w-full rounded-xl border border-line bg-card px-3.5 py-3 pr-11 text-[14px] text-white outline-none transition placeholder:text-mute/50 focus:border-volt focus:ring-1 focus:ring-volt/40 disabled:opacity-50"
+              className="w-full min-h-[46px] rounded-xl border border-line bg-card px-4 py-3 pr-11 text-base sm:text-sm text-white outline-none transition placeholder:text-mute/50 focus:border-volt focus:ring-1 focus:ring-volt/40 disabled:opacity-50"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               aria-label={showPassword ? "Hide password" : "Show password"}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-mute hover:text-white transition p-1"
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-mute transition hover:text-white cursor-pointer"
             >
               {showPassword ? (
                 <svg
@@ -308,7 +304,7 @@ export default function AthleteSignUp({
         <button
           type="submit"
           disabled={loading || Boolean(successMessage)}
-          className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-volt py-3.5 text-xs font-extrabold uppercase tracking-widest text-ink transition hover:brightness-110 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+          className="mt-4 flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-volt py-3.5 text-xs font-extrabold uppercase tracking-widest text-ink transition hover:brightness-110 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
         >
           {loading ? (
             <>
@@ -341,13 +337,13 @@ export default function AthleteSignUp({
       </form>
 
       {/* Switch to login option */}
-      <div className="mt-8 flex flex-col items-center gap-3 text-center text-xs">
+      <div className="mt-8 flex flex-col items-center gap-3 text-center text-xs pb-6">
         <p className="text-mute">
           Already registered?{" "}
           <button
             type="button"
             onClick={onNavigateToLogin}
-            className="font-bold text-white underline decoration-volt decoration-2 underline-offset-4 hover:text-volt"
+            className="font-bold text-white underline decoration-volt decoration-2 underline-offset-4 hover:text-volt cursor-pointer py-1"
           >
             Log in to your account
           </button>
@@ -359,5 +355,5 @@ export default function AthleteSignUp({
         </p>
       </div>
     </div>
-  );
+  )
 }

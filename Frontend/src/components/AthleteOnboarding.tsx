@@ -1,112 +1,85 @@
-import { useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react"
+import { POPULAR_SPORTS, UNIVERSITIES } from "../utils/constants"
+import { validateAthleteOnboarding } from "../utils/validation"
 
 export interface AthleteProfileData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  age: string;
-  sports: string[];
-  university: string;
-  notInUniversity: boolean;
-  bio: string;
+  firstName: string
+  lastName: string
+  email: string
+  age: string
+  sports: string[]
+  university: string
+  notInUniversity: boolean
+  bio: string
 }
 
 interface AthleteOnboardingProps {
   initialData: {
-    email: string;
-  };
-  onComplete: (profile: AthleteProfileData) => void;
+    email: string
+  }
+  onComplete: (profile: AthleteProfileData) => void
 }
-
-const POPULAR_SPORTS = [
-  "Football",
-  "Basketball",
-  "Padel",
-  "Tennis",
-  "Volleyball",
-  "Swimming",
-  "Track & Field",
-  "Handball",
-  "Squash",
-  "CrossFit",
-];
-
-const UNIVERSITIES = [
-  "Cairo University",
-  "American University in Cairo (AUC)",
-  "German University in Cairo (GUC)",
-  "British University in Egypt (BUE)",
-  "Ain Shams University",
-  "Misr International University (MIU)",
-  "Modern Sciences and Arts University (MSA)",
-  "Helwan University",
-  "Alexandria University",
-  "Other / Unlisted",
-];
 
 export default function AthleteOnboarding({
   initialData,
   onComplete,
 }: AthleteOnboardingProps) {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [age, setAge] = useState("");
-  const [selectedSports, setSelectedSports] = useState<string[]>(["Football"]);
-  const [university, setUniversity] = useState(UNIVERSITIES[0]);
-  const [customUniversity, setCustomUniversity] = useState("");
-  const [notInUniversity, setNotInUniversity] = useState(false);
-  const [bio, setBio] = useState("");
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
+  const [age, setAge] = useState("")
+  const [selectedSports, setSelectedSports] = useState<string[]>(["Football"])
+  const [university, setUniversity] = useState(UNIVERSITIES[0])
+  const [customUniversity, setCustomUniversity] = useState("")
+  const [notInUniversity, setNotInUniversity] = useState(false)
+  const [bio, setBio] = useState("")
 
-  const [error, setError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   function toggleSport(sport: string) {
     setSelectedSports((prev) => {
       if (prev.includes(sport)) {
         if (prev.length === 1) {
-          setError("Please select at least one sport.");
-          return prev;
+          setError("Please select at least one sport.")
+          return prev
         }
-        setError(null);
-        return prev.filter((s) => s !== sport);
+        setError(null)
+        return prev.filter((s) => s !== sport)
       } else {
-        setError(null);
-        return [...prev, sport];
+        setError(null)
+        return [...prev, sport]
       }
-    });
+    })
   }
 
   function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    setError(null);
+    e.preventDefault()
+    setError(null)
 
-    if (!firstName.trim()) {
-      setError("Please provide your first name.");
-      return;
-    }
-    if (!lastName.trim()) {
-      setError("Please provide your last name.");
-      return;
-    }
-    if (!age || Number(age) < 14 || Number(age) > 60) {
-      setError("Please enter a valid age between 14 and 60.");
-      return;
-    }
-    if (selectedSports.length === 0) {
-      setError("Please select at least one sport.");
-      return;
-    }
-
-    let finalUniversity = notInUniversity ? "Independent Athlete" : university;
+    let finalUniversity = notInUniversity ? "Independent Athlete" : university
     if (!notInUniversity && university === "Other / Unlisted") {
       if (!customUniversity.trim()) {
-        setError("Please enter your university name.");
-        return;
+        setError("Please enter your university name.")
+        return
       }
-      finalUniversity = customUniversity.trim();
+      finalUniversity = customUniversity.trim()
     }
 
-    setIsSubmitting(true);
+    const validation = validateAthleteOnboarding({
+      firstName,
+      lastName,
+      age,
+      sports: selectedSports,
+      university: finalUniversity,
+      notInUniversity,
+    })
+
+    if (!validation.valid) {
+      setError(validation.error || "Please check your inputs.")
+      return
+    }
+
+    setIsSubmitting(true)
 
     setTimeout(() => {
       onComplete({
@@ -118,12 +91,12 @@ export default function AthleteOnboarding({
         university: finalUniversity,
         notInUniversity,
         bio: bio.trim(),
-      });
-    }, 400);
+      })
+    }, 400)
   }
 
   return (
-    <div className="relative flex h-full flex-col overflow-y-auto px-6 py-6 no-scrollbar sm:px-8">
+    <div className="relative flex h-full flex-col overflow-y-auto px-5 py-6 sm:px-8 no-scrollbar">
       {/* Top Bar with Mandatory Indicator */}
       <div className="mb-5 flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -165,7 +138,7 @@ export default function AthleteOnboarding({
         >
           <div className="flex items-center gap-2">
             <svg
-              className="h-4 w-4 text-red-400 flex-shrink-0"
+              className="h-4 w-4 shrink-0 text-red-400"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -182,7 +155,7 @@ export default function AthleteOnboarding({
 
       {/* Questionnaire Form */}
       <form onSubmit={handleSubmit} className="space-y-4 pb-8">
-        {/* Name Grid (Empty inputs, not prefilled) */}
+        {/* Name Grid */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <label className="block">
             <span className="mb-1.5 block font-mono text-[10px] uppercase tracking-widest text-mute">
@@ -194,7 +167,7 @@ export default function AthleteOnboarding({
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               placeholder="e.g. Omar"
-              className="w-full rounded-xl border border-line bg-card px-3.5 py-3 text-[14px] text-white outline-none transition placeholder:text-mute/50 focus:border-volt focus:ring-1 focus:ring-volt/40"
+              className="w-full min-h-[46px] rounded-xl border border-line bg-card px-4 py-3 text-base sm:text-sm text-white outline-none transition placeholder:text-mute/50 focus:border-volt focus:ring-1 focus:ring-volt/40"
             />
           </label>
 
@@ -208,7 +181,7 @@ export default function AthleteOnboarding({
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
               placeholder="e.g. Hassan"
-              className="w-full rounded-xl border border-line bg-card px-3.5 py-3 text-[14px] text-white outline-none transition placeholder:text-mute/50 focus:border-volt focus:ring-1 focus:ring-volt/40"
+              className="w-full min-h-[46px] rounded-xl border border-line bg-card px-4 py-3 text-base sm:text-sm text-white outline-none transition placeholder:text-mute/50 focus:border-volt focus:ring-1 focus:ring-volt/40"
             />
           </label>
         </div>
@@ -219,17 +192,19 @@ export default function AthleteOnboarding({
             <span className="font-mono text-[10px] uppercase tracking-widest text-mute">
               Age
             </span>
-            <span className="font-mono text-[10px] text-mute">Years (14–60)</span>
+            <span className="font-mono text-[10px] text-mute">
+              Years (15–45)
+            </span>
           </div>
           <input
             type="number"
-            min="14"
-            max="60"
+            min="15"
+            max="45"
             required
             value={age}
             onChange={(e) => setAge(e.target.value)}
             placeholder="e.g. 20"
-            className="w-full rounded-xl border border-line bg-card px-3.5 py-3 text-[14px] text-white outline-none transition placeholder:text-mute/50 focus:border-volt focus:ring-1 focus:ring-volt/40"
+            className="w-full min-h-[46px] rounded-xl border border-line bg-card px-4 py-3 text-base sm:text-sm text-white outline-none transition placeholder:text-mute/50 focus:border-volt focus:ring-1 focus:ring-volt/40"
           />
         </label>
 
@@ -245,13 +220,13 @@ export default function AthleteOnboarding({
           </div>
           <div className="flex flex-wrap gap-2">
             {POPULAR_SPORTS.map((s) => {
-              const isSelected = selectedSports.includes(s);
+              const isSelected = selectedSports.includes(s)
               return (
                 <button
                   key={s}
                   type="button"
                   onClick={() => toggleSport(s)}
-                  className={`flex items-center gap-1.5 rounded-lg px-3 py-2 font-mono text-xs font-bold transition select-none ${
+                  className={`flex min-h-[40px] items-center gap-1.5 rounded-lg px-3 py-2 font-mono text-xs font-bold transition select-none cursor-pointer active:scale-95 ${
                     isSelected
                       ? "border border-volt bg-volt text-ink shadow-sm shadow-volt/20"
                       : "border border-line bg-card text-mute hover:border-volt/50 hover:text-white"
@@ -262,7 +237,7 @@ export default function AthleteOnboarding({
                   </span>
                   <span>{s}</span>
                 </button>
-              );
+              )
             })}
           </div>
         </div>
@@ -275,12 +250,12 @@ export default function AthleteOnboarding({
             </span>
 
             {/* Not in university Checkbox */}
-            <label className="inline-flex cursor-pointer items-center gap-2 select-none">
+            <label className="inline-flex min-h-[40px] cursor-pointer items-center gap-2 select-none py-1">
               <input
                 type="checkbox"
                 checked={notInUniversity}
                 onChange={(e) => setNotInUniversity(e.target.checked)}
-                className="h-4 w-4 rounded border-line bg-card text-volt accent-[#ccff00] focus:ring-volt/40 focus:ring-offset-ink"
+                className="h-5 w-5 rounded border-line bg-card text-volt accent-volt focus:ring-volt/40"
               />
               <span className="font-mono text-[11px] text-white">
                 Not in university
@@ -294,7 +269,7 @@ export default function AthleteOnboarding({
                 <select
                   value={university}
                   onChange={(e) => setUniversity(e.target.value)}
-                  className="w-full appearance-none rounded-xl border border-line bg-card px-3.5 py-3 pr-10 text-[14px] text-white outline-none transition focus:border-volt focus:ring-1 focus:ring-volt/40"
+                  className="w-full min-h-[46px] appearance-none rounded-xl border border-line bg-card px-4 py-3 pr-10 text-base sm:text-sm text-white outline-none transition focus:border-volt focus:ring-1 focus:ring-volt/40 cursor-pointer"
                 >
                   {UNIVERSITIES.map((u) => (
                     <option key={u} value={u} className="bg-ink text-white">
@@ -303,7 +278,14 @@ export default function AthleteOnboarding({
                   ))}
                 </select>
                 <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-mute">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
                     <path d="M6 9l6 6 6-6" />
                   </svg>
                 </div>
@@ -315,17 +297,21 @@ export default function AthleteOnboarding({
                   value={customUniversity}
                   onChange={(e) => setCustomUniversity(e.target.value)}
                   placeholder="Enter your institution name"
-                  className="w-full rounded-xl border border-line bg-card px-3.5 py-3 text-[14px] text-white outline-none transition placeholder:text-mute/50 focus:border-volt focus:ring-1 focus:ring-volt/40"
+                  className="w-full min-h-[46px] rounded-xl border border-line bg-card px-4 py-3 text-base sm:text-sm text-white outline-none transition placeholder:text-mute/50 focus:border-volt focus:ring-1 focus:ring-volt/40"
                 />
               )}
             </>
           ) : (
             <div className="flex items-center gap-2.5 rounded-xl border border-line/60 bg-card/60 p-3.5 text-xs text-mute">
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-volt/10 font-mono text-[10px] font-bold text-volt">
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-volt/10 font-mono text-[10px] font-bold text-volt">
                 ✓
               </span>
               <span>
-                Registered as an <strong className="text-white">Independent / Free Agent Athlete</strong>. You can compete in open tournaments.
+                Registered as an{" "}
+                <strong className="text-white">
+                  Independent / Free Agent Athlete
+                </strong>
+                . You can compete in open tournaments.
               </span>
             </div>
           )}
@@ -345,8 +331,8 @@ export default function AthleteOnboarding({
             rows={4}
             value={bio}
             onChange={(e) => setBio(e.target.value)}
-            placeholder="Tell scouts about your sports achievements, tournament awards, best scores or times (e.g. 100m sprint: 10.8s, 22 goals in Season 25), and your academic major or study plans (e.g. Computer Science major at AUC)..."
-            className="w-full rounded-xl border border-line bg-card px-3.5 py-3 text-[13px] leading-relaxed text-white outline-none transition placeholder:text-mute/50 focus:border-volt focus:ring-1 focus:ring-volt/40 resize-none"
+            placeholder="Tell scouts about your sports achievements, tournament awards, best scores or times, and your academic major or study plans..."
+            className="w-full resize-none rounded-xl border border-line bg-card px-4 py-3 text-base sm:text-sm leading-relaxed text-white outline-none transition placeholder:text-mute/50 focus:border-volt focus:ring-1 focus:ring-volt/40"
           />
         </label>
 
@@ -354,7 +340,7 @@ export default function AthleteOnboarding({
         <button
           type="submit"
           disabled={isSubmitting}
-          className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-volt py-3.5 text-xs font-extrabold uppercase tracking-widest text-ink transition hover:brightness-110 active:scale-[0.99] disabled:opacity-60"
+          className="mt-6 flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-volt py-3.5 text-xs font-extrabold uppercase tracking-widest text-ink transition hover:brightness-110 active:scale-[0.99] disabled:opacity-60 cursor-pointer"
         >
           {isSubmitting ? (
             <span>Saving Profile...</span>
@@ -365,9 +351,10 @@ export default function AthleteOnboarding({
       </form>
 
       {/* Footer Info */}
-      <p className="mt-2 text-center font-mono text-[10px] leading-relaxed text-mute/60">
-        You can update your sports roster, positions, and academic bio anytime in Settings.
+      <p className="mt-2 pb-6 text-center font-mono text-[10px] leading-relaxed text-mute/60">
+        You can update your sports roster, positions, and academic bio anytime
+        in Settings.
       </p>
     </div>
-  );
+  )
 }
