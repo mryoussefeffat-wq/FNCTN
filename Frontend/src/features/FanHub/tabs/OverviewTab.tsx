@@ -1,25 +1,15 @@
-import { useState } from "react"
 import type { FanHubTournament } from "../../../types/fanhub"
-import TicketPurchaseModal from "../components/TicketPurchaseModal"
 
 interface OverviewTabProps {
   tournament: FanHubTournament
 }
 
 export default function OverviewTab({ tournament }: OverviewTabProps) {
-  const [ticketModalOpen, setTicketModalOpen] = useState(false)
-  const [selectedTierId, setSelectedTierId] = useState<string | undefined>()
-
-  function handleOpenTicket(tierId?: string) {
-    setSelectedTierId(tierId)
-    setTicketModalOpen(true)
-  }
-
   const isConcluded = tournament.statusCategory === "past"
 
   return (
     <div className="flex flex-col gap-6 sm:gap-8">
-      {/* ---------------- 1. TICKET PURCHASING SECTION ---------------- */}
+      {/* ---------------- 1. SPECTATOR ACCESS & ADMISSION INFO ---------------- */}
       <section className="rounded-2xl sm:rounded-3xl border border-line bg-card/80 p-5 sm:p-7 backdrop-blur-md">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-line/80 pb-4">
           <div>
@@ -27,94 +17,63 @@ export default function OverviewTab({ tournament }: OverviewTabProps) {
               🎟️ Spectator Access
             </div>
             <h3 className="display mt-1.5 text-xl sm:text-2xl text-white">
-              Spectator Passes &amp; Admissions
+              Spectator Admission &amp; Guidelines
             </h3>
             <p className="text-xs text-mute">
-              Reserve campus admission passes online to avoid gate queues.
+              Admission is open to university students and supporters with valid university ID.
             </p>
           </div>
 
-          {!isConcluded && (
-            <button
-              type="button"
-              onClick={() => handleOpenTicket()}
-              className="flex min-h-[42px] items-center justify-center gap-1.5 rounded-xl bg-volt px-5 py-2.5 text-xs font-black uppercase tracking-wider text-white transition hover:brightness-110 active:scale-95 shadow-md shadow-volt/20 cursor-pointer"
-            >
-              <span>Book Passes Now</span>
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="3"
-              >
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </button>
-          )}
+          <div className="inline-flex items-center gap-2 rounded-xl border border-line bg-ink px-4 py-2 font-mono text-xs text-white">
+            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>Open Campus Entry · Gate Verification</span>
+          </div>
         </div>
 
-        {/* Tickets Grid */}
+        {/* Admission Information Cards */}
         <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {tournament.tickets.map((t) => {
-            const isSoldOut = t.status === "sold_out" || isConcluded
-            return (
-              <div
-                key={t.id}
-                className="flex flex-col justify-between rounded-2xl border border-line/80 bg-ink/70 p-4 transition hover:border-volt/50"
-              >
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-white text-sm sm:text-base">
-                      {t.tier}
-                    </span>
-                    <span
-                      className={`rounded px-2 py-0.5 font-mono text-[10px] font-bold uppercase ${
-                        isSoldOut
-                          ? "bg-red-500/20 text-red-300"
-                          : t.status === "limited"
-                            ? "bg-yellow-500/20 text-yellow-300"
-                            : "bg-emerald-500/20 text-emerald-300"
-                      }`}
-                    >
-                      {isSoldOut ? "Sold Out" : t.status === "limited" ? "Limited" : "Available"}
-                    </span>
-                  </div>
-
-                  <p className="mt-1 text-xs text-mute">{t.description}</p>
-
-                  <div className="mt-3">
-                    <span className="font-mono text-2xl font-black text-volt">
-                      {t.price === 0 ? "Free" : `EGP ${t.price}`}
-                    </span>
-                    {t.price > 0 && (
-                      <span className="font-mono text-[10px] text-mute ml-1">/ person</span>
-                    )}
-                  </div>
-
-                  {/* Perks list */}
-                  <ul className="mt-3 space-y-1.5 text-[11px] text-white/80 border-t border-line/60 pt-2.5">
-                    {t.perks.map((p, idx) => (
-                      <li key={idx} className="flex items-center gap-1.5">
-                        <span className="text-volt text-xs">✓</span>
-                        <span>{p}</span>
-                      </li>
-                    ))}
-                  </ul>
+          {tournament.tickets.map((t) => (
+            <div
+              key={t.id}
+              className="flex flex-col justify-between rounded-2xl border border-line/80 bg-ink/70 p-4 transition hover:border-volt/50"
+            >
+              <div>
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-white text-sm sm:text-base">
+                    {t.tier}
+                  </span>
+                  <span className="rounded bg-emerald-500/20 px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-emerald-300">
+                    {isConcluded ? "Concluded" : "Open Seating"}
+                  </span>
                 </div>
 
-                <button
-                  type="button"
-                  disabled={isSoldOut}
-                  onClick={() => handleOpenTicket(t.id)}
-                  className="mt-4 flex min-h-[38px] w-full items-center justify-center rounded-xl border border-line bg-card py-2 font-mono text-xs font-bold uppercase tracking-wider text-white transition hover:border-volt hover:text-volt active:scale-95 disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
-                >
-                  {isSoldOut ? "Passes Unavailable" : "Select Pass"}
-                </button>
+                <p className="mt-1 text-xs text-mute">{t.description}</p>
+
+                <div className="mt-3">
+                  <span className="font-mono text-2xl font-black text-volt">
+                    {t.price === 0 ? "Free Entry" : `EGP ${t.price}`}
+                  </span>
+                  {t.price > 0 && (
+                    <span className="font-mono text-[10px] text-mute ml-1">/ person</span>
+                  )}
+                </div>
+
+                {/* Perks list */}
+                <ul className="mt-3 space-y-1.5 text-[11px] text-white/80 border-t border-line/60 pt-2.5">
+                  {t.perks.map((p, idx) => (
+                    <li key={idx} className="flex items-center gap-1.5">
+                      <span className="text-volt text-xs">✓</span>
+                      <span>{p}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            )
-          })}
+
+              <div className="mt-4 rounded-xl border border-line/60 bg-card py-2 px-3 text-center font-mono text-[11px] text-mute">
+                Present Student ID at pitch entrance
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -319,15 +278,6 @@ export default function OverviewTab({ tournament }: OverviewTabProps) {
           </div>
         </div>
       </section>
-
-      {/* Ticket Modal */}
-      <TicketPurchaseModal
-        isOpen={ticketModalOpen}
-        tournamentTitle={tournament.title}
-        tickets={tournament.tickets}
-        selectedTicketId={selectedTierId}
-        onClose={() => setTicketModalOpen(false)}
-      />
     </div>
   )
 }

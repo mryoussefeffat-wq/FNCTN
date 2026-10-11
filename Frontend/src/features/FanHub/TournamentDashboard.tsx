@@ -154,7 +154,7 @@ export default function TournamentDashboard({
                 : "text-mute hover:text-white"
             }`}
           >
-            <span>Overview &amp; Tickets</span>
+            <span>Overview &amp; Venue</span>
           </button>
 
           <button

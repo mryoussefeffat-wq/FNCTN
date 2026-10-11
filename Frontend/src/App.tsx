@@ -8,10 +8,9 @@ import LoginView from "./components/LoginView"
 import { Phone } from "./components/PhoneLayout"
 import FanHubContainer from "./features/FanHub/FanHubContainer"
 import ParticipantContainer from "./features/Participant/ParticipantContainer"
-import OrganizerContainer from "./features/Organizer/OrganizerContainer"
 
 export default function App() {
-  const [viewMode, setViewMode] = useState<"landing" | "portal" | "fanhub" | "organizer">("landing")
+  const [viewMode, setViewMode] = useState<"landing" | "portal" | "fanhub">("landing")
   const [hubTournamentId, setHubTournamentId] = useState<string | null>(null)
   const [hubMatchId, setHubMatchId] = useState<string | null>(null)
   const [authed, setAuthed] = useState(false)
@@ -50,9 +49,6 @@ export default function App() {
           setHubMatchId(matchId || null)
           setViewMode("fanhub")
         }}
-        onOpenOrganizerPortal={() => {
-          setViewMode("organizer")
-        }}
       />
     )
   }
@@ -71,9 +67,6 @@ export default function App() {
         onOpenParticipantPortal={() => {
           setViewMode("portal")
         }}
-        onOpenOrganizer={() => {
-          setViewMode("organizer")
-        }}
       />
     )
   }
@@ -84,25 +77,10 @@ export default function App() {
       <ParticipantContainer
         onBackToLanding={() => setViewMode("landing")}
         onOpenFanHub={() => setViewMode("fanhub")}
-        onOpenOrganizer={() => setViewMode("organizer")}
         onLogout={() => {
           setAuthed(false)
           setAuthScreen("login")
           setSignupNotice(null)
-        }}
-      />
-    )
-  }
-
-  // 4. Tournament Committee (Organizer Pages & Pitch Tools)
-  if (viewMode === "organizer") {
-    return (
-      <OrganizerContainer
-        onBackToLanding={() => setViewMode("landing")}
-        onOpenFanHub={() => setViewMode("fanhub")}
-        onOpenParticipantPortal={() => {
-          setAuthed(true)
-          setViewMode("portal")
         }}
       />
     )
@@ -191,7 +169,6 @@ export default function App() {
               setAuthScreen("signup_athlete")
             }}
             onBackToLanding={() => setViewMode("landing")}
-            onOpenOrganizer={() => setViewMode("organizer")}
             signupNotice={signupNotice}
             defaultEmail={prefillEmail}
           />

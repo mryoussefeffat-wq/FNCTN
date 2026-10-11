@@ -1,7 +1,6 @@
 import { useState } from "react"
 import type { LiveMatchDetails } from "../../types/fanhub"
 import MatchStatsChart from "./components/MatchStatsChart"
-import ShareMatchGraphicModal from "./components/ShareMatchGraphicModal"
 
 interface LiveMatchViewerProps {
   match: LiveMatchDetails
@@ -16,7 +15,6 @@ export default function LiveMatchViewer({
   onSelectPlayer,
   onSelectTeam,
 }: LiveMatchViewerProps) {
-  const [shareModalOpen, setShareModalOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<"timeline" | "stats" | "lineups">("timeline")
 
   return (
@@ -40,16 +38,6 @@ export default function LiveMatchViewer({
           </svg>
           <span>Back to Tournament</span>
         </button>
-
-        <div className="flex items-center gap-2.5">
-          <button
-            type="button"
-            onClick={() => setShareModalOpen(true)}
-            className="flex min-h-[40px] items-center gap-2 rounded-xl border border-volt/50 bg-volt/10 px-4 py-2 font-mono text-xs font-bold uppercase text-volt hover:bg-volt hover:text-white transition cursor-pointer shadow-md shadow-volt/10 active:scale-95"
-          >
-            <span>📱 Share Match Graphic</span>
-          </button>
-        </div>
       </div>
 
       {/* ---------------- MAIN BROADCAST SCOREBOARD ---------------- */}
@@ -331,13 +319,6 @@ export default function LiveMatchViewer({
           </div>
         )}
       </main>
-
-      {/* Share Match Graphic Modal */}
-      <ShareMatchGraphicModal
-        isOpen={shareModalOpen}
-        match={match}
-        onClose={() => setShareModalOpen(false)}
-      />
     </div>
   )
 }

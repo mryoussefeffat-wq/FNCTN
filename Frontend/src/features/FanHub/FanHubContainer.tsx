@@ -139,7 +139,7 @@ export default function FanHubContainer({
                 view === "tournament" ? "text-volt font-bold" : "text-mute"
               }`}
             >
-              Brackets &amp; Passes
+              Brackets &amp; Schedules
             </button>
           </nav>
 

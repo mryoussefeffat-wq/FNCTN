@@ -395,7 +395,7 @@ export default function FanHubHome({
                           ? "Champion Trophy"
                           : lowestPrice === 0
                             ? "Free Spectator Pass"
-                            : `Tickets from EGP ${lowestPrice}`}
+                            : "Campus Entry with ID"}
                       </span>
                     </div>
 
