@@ -106,14 +106,16 @@ export default function LandingPage({
             >
               Contact Us
             </button>
-            <button
-              type="button"
-              onClick={() => onOpenFanHub?.()}
-              className="flex items-center gap-1.5 rounded-lg border border-[#A60E13]/50 bg-[#A60E13]/10 px-3 py-1 text-xs font-semibold uppercase text-white hover:bg-[#A60E13] transition cursor-pointer"
-            >
-              <span className="h-1.5 w-1.5 rounded-full bg-[#A60E13] animate-pulse" />
-              <span>Fan Hub</span>
-            </button>
+            {onOpenFanHub && (
+              <button
+                type="button"
+                onClick={() => onOpenFanHub()}
+                className="flex items-center gap-1.5 rounded-lg border border-[#A60E13]/50 bg-[#A60E13]/10 px-3 py-1 text-xs font-semibold uppercase text-white hover:bg-[#A60E13] transition cursor-pointer"
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-[#A60E13] animate-pulse" />
+                <span>Fan Hub</span>
+              </button>
+            )}
           </nav>
 
           {/* Action CTA: Only the single button with text 'Athlete Sign Up' in brand red #A60E13 */}
@@ -209,17 +211,19 @@ export default function LandingPage({
               >
                 Contact Us
               </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setMobileMenuOpen(false)
-                  onOpenFanHub?.()
-                }}
-                className="flex min-h-[44px] items-center gap-2 text-left text-base font-semibold text-white cursor-pointer"
-              >
-                <span className="h-2 w-2 rounded-full bg-[#A60E13] animate-pulse" />
-                <span>Fan Hub (Live &amp; Tickets)</span>
-              </button>
+              {onOpenFanHub && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileMenuOpen(false)
+                    onOpenFanHub()
+                  }}
+                  className="flex min-h-[44px] items-center gap-2 text-left text-base font-semibold text-white cursor-pointer"
+                >
+                  <span className="h-2 w-2 rounded-full bg-[#A60E13] animate-pulse" />
+                  <span>Fan Hub (Live &amp; Tickets)</span>
+                </button>
+              )}
 
               <div className="mt-4 border-t border-[#1F1F24] pt-4">
                 <button
@@ -312,10 +316,10 @@ export default function LandingPage({
                 <button
                   type="button"
                   onClick={() => onOpenFanHub ? onOpenFanHub() : handleNavClick("events")}
-                  className="flex min-h-[48px] items-center justify-center gap-2 rounded-xl border border-[#A60E13]/50 bg-[#A60E13]/10 px-6 py-3.5 font-mono text-xs font-bold uppercase tracking-widest text-white backdrop-blur-md transition hover:bg-[#A60E13] cursor-pointer active:scale-95"
+                  className="flex min-h-[48px] items-center justify-center gap-2 rounded-xl border border-[#1F1F24] bg-[#0A0A0A]/90 px-6 py-3.5 font-mono text-xs font-bold uppercase tracking-widest text-white backdrop-blur-md transition hover:border-[#A60E13] hover:text-[#A60E13] cursor-pointer active:scale-95"
                 >
-                  <span>Follow Live Matches (Fan Hub)</span>
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#A60E13] animate-ping" />
+                  <span>{onOpenFanHub ? "Follow Live Matches (Fan Hub)" : "Explore Tournament Schedule"}</span>
+                  {onOpenFanHub && <span className="h-1.5 w-1.5 rounded-full bg-[#A60E13] animate-ping" />}
                 </button>
               </div>
 
@@ -438,7 +442,7 @@ export default function LandingPage({
                   }
                   className="mt-3.5 flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl bg-[#A60E13] py-3 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-[#BF1218] active:scale-95 shadow-md shadow-[#A60E13]/30 cursor-pointer"
                 >
-                  <span>Explore Tournament Hub</span>
+                  <span>{onOpenFanHub ? "Explore Tournament Hub" : "View Tournament Details"}</span>
                   <span>→</span>
                 </button>
               </div>

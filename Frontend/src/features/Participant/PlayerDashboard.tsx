@@ -456,53 +456,55 @@ export default function PlayerDashboard({
         </section>
 
         {/* Public Fan Hub & Rival Matches Quick Link */}
-        <section className="rounded-2xl sm:rounded-3xl border border-[#1F1F24] bg-[#0A0A0A] p-5 sm:p-6 flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between border-b border-[#1F1F24] pb-3">
-              <span className="font-mono text-[10px] uppercase tracking-wider text-[#8E8E93] font-bold">
-                Fan Hub Spectator Arena
-              </span>
-              <span className="flex items-center gap-1 font-mono text-[10px] text-red-400 font-bold">
-                <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
-                Live Broadcasts
-              </span>
-            </div>
+        {onOpenFanHub && (
+          <section className="rounded-2xl sm:rounded-3xl border border-[#1F1F24] bg-[#0A0A0A] p-5 sm:p-6 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between border-b border-[#1F1F24] pb-3">
+                <span className="font-mono text-[10px] uppercase tracking-wider text-[#8E8E93] font-bold">
+                  Fan Hub Spectator Arena
+                </span>
+                <span className="flex items-center gap-1 font-mono text-[10px] text-red-400 font-bold">
+                  <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
+                  Live Broadcasts
+                </span>
+              </div>
 
-            <div className="mt-4 space-y-2">
-              <h3 className="font-sans font-bold text-lg text-white">
-                Scout Rival University Matches
-              </h3>
-              <p className="text-xs text-white/80 leading-relaxed font-normal">
-                Follow ongoing brackets, ticket availability, food trucks, and live match telemetries from other Egyptian universities in the public Fan Hub.
-              </p>
-            </div>
+              <div className="mt-4 space-y-2">
+                <h3 className="font-sans font-bold text-lg text-white">
+                  Scout Rival University Matches
+                </h3>
+                <p className="text-xs text-white/80 leading-relaxed font-normal">
+                  Follow ongoing brackets, ticket availability, food trucks, and live match telemetries from other Egyptian universities in the public Fan Hub.
+                </p>
+              </div>
 
-            <div className="mt-4 rounded-xl border border-[#1F1F24] bg-[#000000] p-3 text-xs font-mono">
-              <div className="flex items-center justify-between text-[#8E8E93]">
-                <span>Ongoing Collegiate Events:</span>
-                <span className="text-[#A60E13] font-bold">3 Tournaments</span>
+              <div className="mt-4 rounded-xl border border-[#1F1F24] bg-[#000000] p-3 text-xs font-mono">
+                <div className="flex items-center justify-between text-[#8E8E93]">
+                  <span>Ongoing Collegiate Events:</span>
+                  <span className="text-[#A60E13] font-bold">3 Tournaments</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <button
-            type="button"
-            onClick={() => onOpenFanHub?.()}
-            className="mt-5 flex min-h-[42px] w-full items-center justify-center gap-2 rounded-xl bg-[#A60E13] py-2.5 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-[#BF1218] active:scale-95 shadow-md shadow-[#A60E13]/25 cursor-pointer"
-          >
-            <span>Jump to Public Fan Hub</span>
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
+            <button
+              type="button"
+              onClick={() => onOpenFanHub?.()}
+              className="mt-5 flex min-h-[42px] w-full items-center justify-center gap-2 rounded-xl bg-[#A60E13] py-2.5 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-[#BF1218] active:scale-95 shadow-md shadow-[#A60E13]/25 cursor-pointer"
             >
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </button>
-        </section>
+              <span>Jump to Public Fan Hub</span>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </button>
+          </section>
+        )}
       </div>
 
       {/* ---------------- 6. DIGITAL ACCREDITATION PASS MODAL ---------------- */}

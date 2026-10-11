@@ -6,13 +6,10 @@ import AthleteOnboarding, {
 } from "./components/AthleteOnboarding"
 import LoginView from "./components/LoginView"
 import { Phone } from "./components/PhoneLayout"
-import FanHubContainer from "./features/FanHub/FanHubContainer"
 import ParticipantContainer from "./features/Participant/ParticipantContainer"
 
 export default function App() {
-  const [viewMode, setViewMode] = useState<"landing" | "portal" | "fanhub">("landing")
-  const [hubTournamentId, setHubTournamentId] = useState<string | null>(null)
-  const [hubMatchId, setHubMatchId] = useState<string | null>(null)
+  const [viewMode, setViewMode] = useState<"landing" | "portal">("landing")
   const [authed, setAuthed] = useState(false)
   const [authScreen, setAuthScreen] =
     useState<"login" | "signup_athlete" | "onboarding_athlete">("login")
@@ -44,39 +41,15 @@ export default function App() {
           setAuthScreen("signup_athlete")
           setViewMode("portal")
         }}
-        onOpenFanHub={(tournamentId, matchId) => {
-          setHubTournamentId(tournamentId || null)
-          setHubMatchId(matchId || null)
-          setViewMode("fanhub")
-        }}
       />
     )
   }
 
-  // 2. The Fan Hub (Public App & Engagement)
-  if (viewMode === "fanhub") {
-    return (
-      <FanHubContainer
-        initialTournamentId={hubTournamentId}
-        initialMatchId={hubMatchId}
-        onBackToLanding={() => {
-          setHubTournamentId(null)
-          setHubMatchId(null)
-          setViewMode("landing")
-        }}
-        onOpenParticipantPortal={() => {
-          setViewMode("portal")
-        }}
-      />
-    )
-  }
-
-  // 3. Logged-in Participant (Student Athlete) Portal View
+  // 2. Logged-in Participant (Student Athlete) Portal View
   if (viewMode === "portal" && authed) {
     return (
       <ParticipantContainer
         onBackToLanding={() => setViewMode("landing")}
-        onOpenFanHub={() => setViewMode("fanhub")}
         onLogout={() => {
           setAuthed(false)
           setAuthScreen("login")
@@ -86,7 +59,7 @@ export default function App() {
     )
   }
 
-  // 4. Interactive Auth & Portal Gateway View
+  // 3. Interactive Auth & Portal Gateway View
   return (
     <main className="relative flex min-h-[100dvh] w-full flex-col items-center justify-center bg-[#000000] sm:p-4">
       {/* Desktop Floating Link (positioned outside mobile phone frame) */}

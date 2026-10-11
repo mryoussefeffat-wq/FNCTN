@@ -20,7 +20,7 @@ export type ParticipantTab = "dashboard" | "profile" | "teams" | "settings"
 
 interface ParticipantContainerProps {
   onBackToLanding: () => void
-  onOpenFanHub: () => void
+  onOpenFanHub?: () => void
   onOpenOrganizer?: () => void
   onLogout: () => void
 }
@@ -152,15 +152,17 @@ export default function ParticipantContainer({
               </button>
             )}
 
-            <button
-              type="button"
-              onClick={onOpenFanHub}
-              className="flex min-h-[38px] items-center gap-1.5 rounded-xl border border-[#A60E13]/50 bg-[#A60E13]/10 px-3 py-1.5 font-mono text-xs text-white hover:bg-[#A60E13] transition cursor-pointer active:scale-95"
-            >
-              <span className="h-1.5 w-1.5 rounded-full bg-[#A60E13] animate-pulse" />
-              <span className="hidden sm:inline">Spectator Fan Hub</span>
-              <span className="sm:hidden">Fan Hub</span>
-            </button>
+            {onOpenFanHub && (
+              <button
+                type="button"
+                onClick={onOpenFanHub}
+                className="flex min-h-[38px] items-center gap-1.5 rounded-xl border border-[#A60E13]/50 bg-[#A60E13]/10 px-3 py-1.5 font-mono text-xs text-white hover:bg-[#A60E13] transition cursor-pointer active:scale-95"
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-[#A60E13] animate-pulse" />
+                <span className="hidden sm:inline">Spectator Fan Hub</span>
+                <span className="sm:hidden">Fan Hub</span>
+              </button>
+            )}
 
             <button
               type="button"
@@ -281,17 +283,19 @@ export default function ParticipantContainer({
           <span className="font-mono text-[9px] uppercase tracking-wider">Profile &amp; ID</span>
         </button>
 
-        <button
-          type="button"
-          onClick={onOpenFanHub}
-          className="flex min-h-[48px] flex-col items-center justify-center gap-1 py-1 transition-all active:scale-95 cursor-pointer text-[#8E8E93]"
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="12" cy="12" r="10" />
-            <polygon points="10 8 16 12 10 16 10 8" />
-          </svg>
-          <span className="font-mono text-[9px] uppercase tracking-wider">Fan Hub</span>
-        </button>
+        {onOpenFanHub && (
+          <button
+            type="button"
+            onClick={onOpenFanHub}
+            className="flex min-h-[48px] flex-col items-center justify-center gap-1 py-1 transition-all active:scale-95 cursor-pointer text-[#8E8E93]"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="10" />
+              <polygon points="10 8 16 12 10 16 10 8" />
+            </svg>
+            <span className="font-mono text-[9px] uppercase tracking-wider">Fan Hub</span>
+          </button>
+        )}
       </nav>
     </div>
   )
