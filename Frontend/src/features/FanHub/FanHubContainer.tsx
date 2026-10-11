@@ -19,6 +19,7 @@ interface FanHubContainerProps {
   initialMatchId?: string | null
   onBackToLanding: () => void
   onOpenParticipantPortal: () => void
+  onOpenOrganizer?: () => void
 }
 
 export default function FanHubContainer({
@@ -26,6 +27,7 @@ export default function FanHubContainer({
   initialMatchId = null,
   onBackToLanding,
   onOpenParticipantPortal,
+  onOpenOrganizer,
 }: FanHubContainerProps) {
   const [view, setView] = useState<FanHubView>(
     initialMatchId
@@ -84,7 +86,7 @@ export default function FanHubContainer({
   }
 
   return (
-    <div className="min-h-screen w-full bg-[#07080a] font-sans text-white selection:bg-volt selection:text-ink">
+    <div className="min-h-screen w-full bg-[#000000] font-sans text-white selection:bg-volt selection:text-white">
       {/* ---------------- FAN HUB GLOBAL STICKY HEADER ---------------- */}
       <header className="sticky top-0 z-40 border-b border-line/80 bg-ink/90 backdrop-blur-xl transition-all">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-8">
@@ -143,6 +145,16 @@ export default function FanHubContainer({
 
           {/* Cross-App Navigation CTAs */}
           <div className="flex items-center gap-2 sm:gap-3">
+            {onOpenOrganizer && (
+              <button
+                type="button"
+                onClick={onOpenOrganizer}
+                className="hidden lg:flex min-h-[38px] items-center gap-1.5 rounded-xl border border-line bg-card/80 px-3 py-1.5 font-mono text-xs text-mute hover:border-volt hover:text-white transition cursor-pointer active:scale-95"
+              >
+                <span>⚽ Pitch Tools</span>
+              </button>
+            )}
+
             <button
               type="button"
               onClick={onBackToLanding}
@@ -165,7 +177,7 @@ export default function FanHubContainer({
             <button
               type="button"
               onClick={onOpenParticipantPortal}
-              className="flex min-h-[38px] items-center gap-1.5 rounded-xl bg-volt px-3.5 py-1.5 font-mono text-xs font-black uppercase tracking-wider text-ink transition hover:brightness-110 active:scale-95 shadow-md shadow-volt/20 cursor-pointer"
+              className="flex min-h-[38px] items-center gap-1.5 rounded-xl bg-volt px-3.5 py-1.5 font-mono text-xs font-black uppercase tracking-wider text-white transition hover:brightness-110 active:scale-95 shadow-md shadow-volt/20 cursor-pointer"
             >
               <span>Athlete Portal</span>
               <svg

@@ -1,31 +1,36 @@
-@import url('https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
 @import 'tailwindcss';
 
 @theme {
-  --font-sans: 'Archivo', system-ui, sans-serif;
+  --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
-  --color-ink: #0f1115;
-  --color-card: #181b21;
-  --color-line: #2a2d35;
 
   /* ==========================================================================
-     PRIMARY BRAND ACCENT COLOR
-     To switch between colors, just comment out the active one and uncomment the other:
+     FNCTN BRAND PALETTE (Per Architecture Specifications)
+     - Primary Accent (Vivid Red): #A60E13
+     - Primary Background (Black): #000000
+     - Secondary Text/Wordmark (White): #FFFFFF
      ========================================================================== */
-  
-  /* ---> OPTION A: Volt Yellow (Active) <--- */
-  --color-volt: #ccff00;
+  --color-brand-red: #A60E13;
+  --color-brand-red-hover: #BF1218;
+  --color-brand-red-active: #8C0C10;
+  --color-brand-black: #000000;
+  --color-brand-white: #FFFFFF;
 
-  /* ---> OPTION B: Vibrant Red (Alternative) <--- */
-  /* --color-volt: #ff1e38; */
-
-  --color-mute: #9aa0ac;
+  /* UI tokens mapped to brand identity */
+  --color-volt: #A60E13;
+  --color-volt-hover: #BF1218;
+  --color-ink: #000000;
+  --color-card: #0A0A0A;
+  --color-card-border: #1C1C1E;
+  --color-line: #1F1F24;
+  --color-mute: #8E8E93;
 }
 
 html,
 body {
-  background: #07080a;
-  color: #fff;
+  background: #000000;
+  color: #FFFFFF;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
@@ -36,12 +41,8 @@ body {
 }
 
 ::selection {
-  /* ---> Selection for Yellow (Active) <--- */
-  background: #ccff00;
-  color: #0f1115;
-
-  /* ---> Selection for Vibrant Red (Alternative) <--- */
-  /* background: #ff1e38; color: #ffffff; */
+  background: #A60E13;
+  color: #FFFFFF;
 }
 
 .no-scrollbar {
@@ -52,25 +53,41 @@ body {
   display: none;
 }
 
+/* Headings font hierarchy */
 .display {
-  font-stretch: 75%;
+  font-family: var(--font-sans);
   font-weight: 800;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   text-transform: uppercase;
 }
 
-@keyframes pulse-volt {
-  /* ---> Pulse Glow for Yellow (Active) <--- */
-  0%, 100% { box-shadow: 0 0 0 0 rgba(204, 255, 0, 0.55), 0 0 18px rgba(204, 255, 0, 0.5); }
-  50% { box-shadow: 0 0 0 6px rgba(204, 255, 0, 0), 0 0 26px rgba(204, 255, 0, 0.8); }
-
-  /* ---> Pulse Glow for Vibrant Red (Alternative) <---
-  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 30, 56, 0.55), 0 0 18px rgba(255, 30, 56, 0.5); }
-  50% { box-shadow: 0 0 0 6px rgba(255, 30, 56, 0), 0 0 26px rgba(255, 30, 56, 0.8); }
-  */
+/* Specific Section Heading Styles per specifications:
+   - Major Section Titles: Vivid Red (#A60E13) Poppins bold
+   - Standard Headings: White (#FFFFFF) Poppins semi-bold
+*/
+.major-title {
+  color: #A60E13;
+  font-weight: 700;
+  font-family: var(--font-sans);
 }
+
+.standard-heading {
+  color: #FFFFFF;
+  font-weight: 600;
+  font-family: var(--font-sans);
+}
+
+@keyframes pulse-red {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(166, 14, 19, 0.6), 0 0 16px rgba(166, 14, 19, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(166, 14, 19, 0), 0 0 24px rgba(166, 14, 19, 0.75);
+  }
+}
+
 .live-glow {
-  animation: pulse-volt 1.8s ease-in-out infinite;
+  animation: pulse-red 1.8s ease-in-out infinite;
 }
 
 /* Safe area padding utilities for mobile notch and home indicators */
@@ -81,3 +98,4 @@ body {
 .safe-padding-bottom {
   padding-bottom: max(1.25rem, env(safe-area-inset-bottom, 1.25rem));
 }
+

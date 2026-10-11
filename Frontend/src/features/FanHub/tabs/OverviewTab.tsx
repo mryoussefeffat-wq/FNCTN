@@ -38,7 +38,7 @@ export default function OverviewTab({ tournament }: OverviewTabProps) {
             <button
               type="button"
               onClick={() => handleOpenTicket()}
-              className="flex min-h-[42px] items-center justify-center gap-1.5 rounded-xl bg-volt px-5 py-2.5 text-xs font-black uppercase tracking-wider text-ink transition hover:brightness-110 active:scale-95 shadow-md shadow-volt/20 cursor-pointer"
+              className="flex min-h-[42px] items-center justify-center gap-1.5 rounded-xl bg-volt px-5 py-2.5 text-xs font-black uppercase tracking-wider text-white transition hover:brightness-110 active:scale-95 shadow-md shadow-volt/20 cursor-pointer"
             >
               <span>Book Passes Now</span>
               <svg
@@ -184,7 +184,7 @@ export default function OverviewTab({ tournament }: OverviewTabProps) {
 
             {/* Stadium Pin Marker */}
             <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-volt text-ink text-xl shadow-2xl shadow-volt/50 animate-bounce">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-volt text-white text-xl shadow-2xl shadow-volt/50 animate-bounce">
                 📍
               </div>
               <div className="mt-2 rounded-xl border border-line bg-ink/95 px-3 py-1.5 backdrop-blur-md">

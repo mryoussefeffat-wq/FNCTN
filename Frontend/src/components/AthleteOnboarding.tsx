@@ -228,7 +228,7 @@ export default function AthleteOnboarding({
                   onClick={() => toggleSport(s)}
                   className={`flex min-h-[40px] items-center gap-1.5 rounded-lg px-3 py-2 font-mono text-xs font-bold transition select-none cursor-pointer active:scale-95 ${
                     isSelected
-                      ? "border border-volt bg-volt text-ink shadow-sm shadow-volt/20"
+                      ? "border border-volt bg-volt text-white shadow-sm shadow-volt/20"
                       : "border border-line bg-card text-mute hover:border-volt/50 hover:text-white"
                   }`}
                 >
@@ -340,7 +340,7 @@ export default function AthleteOnboarding({
         <button
           type="submit"
           disabled={isSubmitting}
-          className="mt-6 flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-volt py-3.5 text-xs font-extrabold uppercase tracking-widest text-ink transition hover:brightness-110 active:scale-[0.99] disabled:opacity-60 cursor-pointer"
+          className="mt-6 flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-[#A60E13] py-3.5 text-xs font-bold uppercase tracking-widest text-white transition hover:bg-[#BF1218] active:scale-[0.99] disabled:opacity-60 cursor-pointer shadow-md shadow-[#A60E13]/30"
         >
           {isSubmitting ? (
             <span>Saving Profile...</span>

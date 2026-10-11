@@ -38,7 +38,7 @@ export default function StandingsView({ go }: StandingsViewProps) {
               onClick={() => setSport(s)}
               className={`flex min-h-[40px] items-center justify-center rounded-lg py-2 text-xs sm:text-sm font-bold transition cursor-pointer active:scale-95 ${
                 s === sport
-                  ? "bg-volt text-ink shadow-sm"
+                  ? "bg-volt text-white shadow-sm"
                   : "text-mute hover:text-white"
               }`}
             >

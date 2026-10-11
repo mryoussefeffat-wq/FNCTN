@@ -44,7 +44,7 @@ export default function BracketsTab({
             onClick={() => setViewSubTab("bracket")}
             className={`min-h-[36px] rounded-lg px-3 py-1 font-mono text-xs font-bold transition cursor-pointer ${
               viewSubTab === "bracket"
-                ? "bg-volt text-ink shadow-md shadow-volt/20"
+                ? "bg-volt text-white shadow-md shadow-volt/20"
                 : "text-mute hover:text-white"
             }`}
           >
@@ -55,7 +55,7 @@ export default function BracketsTab({
             onClick={() => setViewSubTab("schedule")}
             className={`min-h-[36px] rounded-lg px-3 py-1 font-mono text-xs font-bold transition cursor-pointer ${
               viewSubTab === "schedule"
-                ? "bg-volt text-ink shadow-md shadow-volt/20"
+                ? "bg-volt text-white shadow-md shadow-volt/20"
                 : "text-mute hover:text-white"
             }`}
           >
@@ -193,7 +193,7 @@ export default function BracketsTab({
                         <button
                           type="button"
                           onClick={() => onOpenLiveMatch(m.id)}
-                          className="flex min-h-[38px] w-full md:w-auto items-center justify-center gap-1.5 rounded-xl bg-volt px-4 py-2 font-mono text-xs font-black uppercase tracking-wider text-ink transition hover:brightness-110 active:scale-95 cursor-pointer shadow-md shadow-volt/20"
+                          className="flex min-h-[38px] w-full md:w-auto items-center justify-center gap-1.5 rounded-xl bg-volt px-4 py-2 font-mono text-xs font-black uppercase tracking-wider text-white transition hover:brightness-110 active:scale-95 cursor-pointer shadow-md shadow-volt/20"
                         >
                           <span>Watch Live</span>
                           <svg

@@ -2,8 +2,8 @@ import type { ReactNode } from "react"
 
 export function LiveBadge({ label = "Live" }: { label?: string }) {
   return (
-    <span className="live-glow inline-flex items-center gap-1.5 rounded-full bg-volt px-2.5 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-ink">
-      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-ink" />
+    <span className="live-glow inline-flex items-center gap-1.5 rounded-full bg-[#A60E13] px-2.5 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-white">
+      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white" />
       {label}
     </span>
   )

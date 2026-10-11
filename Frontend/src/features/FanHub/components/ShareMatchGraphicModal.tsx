@@ -146,7 +146,7 @@ export default function ShareMatchGraphicModal({
           <button
             type="button"
             onClick={handleCopyShareLink}
-            className="flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-xl bg-volt px-4 py-2.5 font-mono text-xs font-black uppercase tracking-wider text-ink transition hover:brightness-110 active:scale-95 shadow-md shadow-volt/20 cursor-pointer"
+            className="flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-xl bg-volt px-4 py-2.5 font-mono text-xs font-black uppercase tracking-wider text-white transition hover:brightness-110 active:scale-95 shadow-md shadow-volt/20 cursor-pointer"
           >
             <span>{copied ? "✓ Copied to Clipboard!" : "Copy Share Link"}</span>
           </button>

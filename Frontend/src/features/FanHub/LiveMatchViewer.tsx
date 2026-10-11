@@ -45,7 +45,7 @@ export default function LiveMatchViewer({
           <button
             type="button"
             onClick={() => setShareModalOpen(true)}
-            className="flex min-h-[40px] items-center gap-2 rounded-xl border border-volt/50 bg-volt/10 px-4 py-2 font-mono text-xs font-bold uppercase text-volt hover:bg-volt hover:text-ink transition cursor-pointer shadow-md shadow-volt/10 active:scale-95"
+            className="flex min-h-[40px] items-center gap-2 rounded-xl border border-volt/50 bg-volt/10 px-4 py-2 font-mono text-xs font-bold uppercase text-volt hover:bg-volt hover:text-white transition cursor-pointer shadow-md shadow-volt/10 active:scale-95"
           >
             <span>📱 Share Match Graphic</span>
           </button>
@@ -149,7 +149,7 @@ export default function LiveMatchViewer({
           onClick={() => setActiveTab("timeline")}
           className={`flex min-h-[38px] flex-1 items-center justify-center rounded-xl font-mono text-xs font-bold transition cursor-pointer ${
             activeTab === "timeline"
-              ? "bg-volt text-ink shadow-md shadow-volt/20"
+              ? "bg-volt text-white shadow-md shadow-volt/20"
               : "text-mute hover:text-white"
           }`}
         >
@@ -161,7 +161,7 @@ export default function LiveMatchViewer({
           onClick={() => setActiveTab("stats")}
           className={`flex min-h-[38px] flex-1 items-center justify-center rounded-xl font-mono text-xs font-bold transition cursor-pointer ${
             activeTab === "stats"
-              ? "bg-volt text-ink shadow-md shadow-volt/20"
+              ? "bg-volt text-white shadow-md shadow-volt/20"
               : "text-mute hover:text-white"
           }`}
         >
@@ -173,7 +173,7 @@ export default function LiveMatchViewer({
           onClick={() => setActiveTab("lineups")}
           className={`flex min-h-[38px] flex-1 items-center justify-center rounded-xl font-mono text-xs font-bold transition cursor-pointer ${
             activeTab === "lineups"
-              ? "bg-volt text-ink shadow-md shadow-volt/20"
+              ? "bg-volt text-white shadow-md shadow-volt/20"
               : "text-mute hover:text-white"
           }`}
         >

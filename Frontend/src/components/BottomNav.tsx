@@ -73,7 +73,7 @@ export default function BottomNav({ active, go }: BottomNavProps) {
             <span
               className={`h-0.5 w-6 rounded-full transition-all ${
                 on
-                  ? "bg-volt shadow-[0_0_8px_rgba(204,255,0,0.6)]"
+                  ? "bg-volt shadow-[0_0_8px_rgba(166,14,19,0.8)]"
                   : "bg-transparent"
               }`}
             />

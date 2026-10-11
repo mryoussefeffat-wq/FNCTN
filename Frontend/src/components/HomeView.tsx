@@ -63,7 +63,7 @@ export default function HomeView({ go }: HomeViewProps) {
 
             <button
               type="button"
-              className="mt-4 sm:mt-5 flex min-h-[46px] w-full items-center justify-center rounded-xl border border-volt/50 py-2.5 font-mono text-xs font-bold uppercase tracking-widest text-volt transition hover:bg-volt hover:text-ink active:scale-[0.99] cursor-pointer"
+              className="mt-4 sm:mt-5 flex min-h-[46px] w-full items-center justify-center rounded-xl border border-volt/50 py-2.5 font-mono text-xs font-bold uppercase tracking-widest text-volt transition hover:bg-volt hover:text-white active:scale-[0.99] cursor-pointer"
             >
               Follow match
             </button>

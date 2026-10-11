@@ -304,12 +304,12 @@ export default function AthleteSignUp({
         <button
           type="submit"
           disabled={loading || Boolean(successMessage)}
-          className="mt-4 flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-volt py-3.5 text-xs font-extrabold uppercase tracking-widest text-ink transition hover:brightness-110 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
+          className="mt-4 flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-[#A60E13] py-3.5 text-xs font-bold uppercase tracking-widest text-white transition hover:bg-[#BF1218] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer shadow-md shadow-[#A60E13]/30"
         >
           {loading ? (
             <>
               <svg
-                className="h-4 w-4 animate-spin text-ink"
+                className="h-4 w-4 animate-spin text-white"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"

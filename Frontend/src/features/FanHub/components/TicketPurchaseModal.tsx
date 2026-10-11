@@ -210,7 +210,7 @@ export default function TicketPurchaseModal({
                 <button
                   type="submit"
                   disabled={selectedTier?.status === "sold_out"}
-                  className="flex min-h-[46px] items-center justify-center gap-2 rounded-xl bg-volt px-6 py-2.5 text-xs font-black uppercase tracking-wider text-ink transition hover:brightness-110 active:scale-95 shadow-lg shadow-volt/25 cursor-pointer disabled:opacity-50"
+                  className="flex min-h-[46px] items-center justify-center gap-2 rounded-xl bg-volt px-6 py-2.5 text-xs font-black uppercase tracking-wider text-white transition hover:brightness-110 active:scale-95 shadow-lg shadow-volt/25 cursor-pointer disabled:opacity-50"
                 >
                   <span>Confirm Reservation</span>
                   <svg
@@ -261,9 +261,9 @@ export default function TicketPurchaseModal({
               </div>
 
               {/* Simulated QR Code */}
-              <div className="mt-4 flex flex-col items-center justify-center rounded-xl bg-white p-3 text-ink">
+              <div className="mt-4 flex flex-col items-center justify-center rounded-xl bg-white p-3 text-black">
                 <div className="h-28 w-28 bg-[repeating-conic-gradient(#000_0%_25%,#fff_0%_50%)] bg-[length:14px_14px] rounded-lg" />
-                <span className="mt-2 font-mono text-[10px] font-bold tracking-widest text-ink">
+                <span className="mt-2 font-mono text-[10px] font-bold tracking-widest text-black">
                   SCAN AT GATE 3
                 </span>
               </div>
@@ -272,7 +272,7 @@ export default function TicketPurchaseModal({
             <button
               type="button"
               onClick={handleReset}
-              className="w-full rounded-xl bg-volt py-3 text-xs font-black uppercase text-ink hover:brightness-110 active:scale-95 cursor-pointer"
+              className="w-full rounded-xl bg-volt py-3 text-xs font-black uppercase text-white hover:brightness-110 active:scale-95 cursor-pointer"
             >
               Done &amp; Return to Dashboard
             </button>

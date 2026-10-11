@@ -7,6 +7,7 @@ interface LoginViewProps {
   onLogin: () => void
   onNavigateToSignUpAthlete: () => void
   onBackToLanding?: () => void
+  onOpenOrganizer?: () => void
   signupNotice?: string | null
   defaultEmail?: string
 }
@@ -15,6 +16,7 @@ export default function LoginView({
   onLogin,
   onNavigateToSignUpAthlete,
   onBackToLanding,
+  onOpenOrganizer,
   signupNotice,
   defaultEmail = "",
 }: LoginViewProps) {
@@ -93,7 +95,7 @@ export default function LoginView({
           />
           <button
             type="submit"
-            className="mt-2 flex min-h-[48px] w-full items-center justify-center rounded-xl bg-volt py-3.5 text-xs sm:text-sm font-extrabold uppercase tracking-widest text-ink transition hover:brightness-110 active:scale-[0.99] cursor-pointer"
+            className="mt-2 flex min-h-[48px] w-full items-center justify-center rounded-xl bg-[#A60E13] py-3.5 text-xs sm:text-sm font-bold uppercase tracking-widest text-white transition hover:bg-[#BF1218] active:scale-[0.99] cursor-pointer shadow-md shadow-[#A60E13]/30"
           >
             Log In
           </button>
@@ -103,10 +105,19 @@ export default function LoginView({
           <button
             type="button"
             onClick={onNavigateToSignUpAthlete}
-            className="font-bold text-white underline decoration-volt decoration-2 underline-offset-4 hover:text-volt cursor-pointer py-1"
+            className="font-bold text-white underline decoration-[#A60E13] decoration-2 underline-offset-4 hover:text-[#A60E13] cursor-pointer py-1"
           >
             Create Student Athlete Account
           </button>
+          {onOpenOrganizer && (
+            <button
+              type="button"
+              onClick={onOpenOrganizer}
+              className="font-mono text-xs text-[#8E8E93] hover:text-[#A60E13] py-1 transition cursor-pointer"
+            >
+              Enter as Tournament Committee Official →
+            </button>
+          )}
           <a
             href="#"
             className="text-mute underline underline-offset-4 hover:text-white py-1"

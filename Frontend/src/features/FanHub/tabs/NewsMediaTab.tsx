@@ -131,7 +131,7 @@ export default function NewsMediaTab({
                 onClick={() => setPhotoCategory(cat)}
                 className={`min-h-[34px] rounded-lg px-3 py-1 font-mono text-xs font-bold transition cursor-pointer ${
                   photoCategory === cat
-                    ? "bg-volt text-ink shadow-md shadow-volt/20"
+                    ? "bg-volt text-white shadow-md shadow-volt/20"
                     : "text-mute hover:text-white"
                 }`}
               >

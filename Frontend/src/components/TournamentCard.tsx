@@ -12,68 +12,68 @@ export default function TournamentCard({
   return (
     <div
       onClick={() => onSelect(event)}
-      className="group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-line bg-card transition hover:border-volt/80 hover:shadow-xl hover:shadow-volt/10 active:scale-[0.99]"
+      className="group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-[#1F1F24] bg-[#0A0A0A] transition hover:border-[#A60E13]/80 hover:shadow-xl hover:shadow-[#A60E13]/10 active:scale-[0.99]"
     >
       {/* Event Photo & Sport Badge */}
-      <div className="relative h-44 sm:h-48 w-full overflow-hidden bg-ink">
+      <div className="relative h-44 sm:h-48 w-full overflow-hidden bg-[#000000]">
         <img
           src={event.image}
           alt={event.title}
           loading="lazy"
           className="h-full w-full object-cover opacity-65 transition duration-500 group-hover:scale-105 group-hover:opacity-85"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/30 to-transparent" />
 
         <div className="absolute left-3 top-3 flex items-center gap-2">
-          <span className="rounded-md bg-volt px-2 py-0.5 font-mono text-[10px] font-extrabold uppercase text-ink">
+          <span className="rounded-md bg-[#A60E13] px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-white shadow-sm">
             {event.sport}
           </span>
           {event.statusCategory === "live" && (
-            <span className="animate-pulse rounded-md bg-red-600 px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-white">
+            <span className="animate-pulse rounded-md bg-[#A60E13] px-2 py-0.5 font-mono text-[10px] font-bold uppercase text-white border border-white/30">
               LIVE NOW
             </span>
           )}
         </div>
 
         {event.prize && (
-          <div className="absolute bottom-2.5 right-3 font-mono text-xs font-bold text-volt">
-            {event.prize}
+          <div className="absolute bottom-2.5 right-3 rounded-md bg-[#000000]/80 border border-[#A60E13]/40 px-2 py-0.5 font-mono text-xs font-bold text-white backdrop-blur-md">
+            🏆 {event.prize}
           </div>
         )}
       </div>
 
       {/* Card Body */}
       <div className="flex flex-1 flex-col p-4 sm:p-5">
-        <h3 className="display text-lg sm:text-xl leading-snug text-white transition group-hover:text-volt">
+        <h3 className="font-sans font-semibold text-lg sm:text-xl leading-snug text-white transition group-hover:text-[#A60E13]">
           {event.title}
         </h3>
 
         {/* Dates & Venue */}
-        <div className="mt-2.5 sm:mt-3 space-y-1.5 text-xs text-mute">
+        <div className="mt-2.5 sm:mt-3 space-y-1.5 text-xs text-[#8E8E93]">
           <div className="flex items-center gap-2">
-            <span className="text-volt">📅</span>
+            <span className="text-[#A60E13]">📅</span>
             <span>{event.date}</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-volt">📍</span>
+            <span className="text-[#A60E13]">📍</span>
             <span className="truncate">{event.venue}</span>
           </div>
         </div>
 
         {/* 1. Sponsor Showcase Section (Dedicated body section with sized logo/badge) */}
-        <div className="mt-3.5 border-t border-line/60 pt-3">
-          <p className="mb-2 font-mono text-[10px] uppercase tracking-wider text-mute">
+        <div className="mt-3.5 border-t border-[#1F1F24] pt-3">
+          <p className="mb-2 font-mono text-[10px] uppercase tracking-wider text-[#8E8E93]">
             Presented By:
           </p>
-          <div className="flex items-center gap-2.5 rounded-xl border border-line bg-ink/70 p-2.5 transition group-hover:border-volt/40">
-            <span className="flex h-7 px-2.5 items-center justify-center rounded-lg bg-card border border-volt/30 font-mono text-[10px] font-black text-volt shrink-0 shadow-sm">
+          <div className="flex items-center gap-2.5 rounded-xl border border-[#1F1F24] bg-[#000000] p-2.5 transition group-hover:border-[#A60E13]/40">
+            <span className="flex h-7 px-2.5 items-center justify-center rounded-lg bg-[#0A0A0A] border border-[#A60E13]/30 font-mono text-[10px] font-bold text-white shrink-0 shadow-sm">
               {event.sponsor.badge}
             </span>
             <div className="min-w-0 flex-1 truncate">
-              <span className="block font-bold text-white text-xs truncate">
+              <span className="block font-semibold text-white text-xs truncate">
                 {event.sponsor.name}
               </span>
-              <span className="block font-mono text-[10px] text-mute truncate">
+              <span className="block font-mono text-[10px] text-[#8E8E93] truncate">
                 {event.sponsor.tagline}
               </span>
             </div>
@@ -81,15 +81,15 @@ export default function TournamentCard({
         </div>
 
         {/* 2. Fan Services Spectator Perks List */}
-        <div className="mt-3 border-t border-line/60 pt-3">
-          <p className="mb-2 font-mono text-[10px] uppercase tracking-wider text-volt">
+        <div className="mt-3 border-t border-[#1F1F24] pt-3">
+          <p className="mb-2 font-mono text-[10px] uppercase tracking-wider text-[#8E8E93]">
             Fan Services Available:
           </p>
           <div className="flex flex-wrap gap-1.5 sm:gap-2">
             {event.fanServices.map((fs, idx) => (
               <span
                 key={idx}
-                className="inline-flex items-center gap-1 rounded-md border border-line bg-ink/70 px-2 py-1 font-mono text-[9px] sm:text-[10px] text-white"
+                className="inline-flex items-center gap-1 rounded-md border border-[#1F1F24] bg-[#000000] px-2 py-1 font-mono text-[9px] sm:text-[10px] text-white"
               >
                 <span>{fs.icon}</span>
                 <span>{fs.label}</span>
@@ -99,11 +99,11 @@ export default function TournamentCard({
         </div>
 
         {/* Card Tap CTA */}
-        <div className="mt-4 sm:mt-5 flex min-h-[44px] items-center justify-between border-t border-line/60 pt-3.5">
-          <span className="font-mono text-xs font-bold text-white transition group-hover:text-volt">
+        <div className="mt-4 sm:mt-5 flex min-h-[44px] items-center justify-between border-t border-[#1F1F24] pt-3.5">
+          <span className="font-mono text-xs font-bold text-white transition group-hover:text-[#A60E13]">
             View Tournament Hub →
           </span>
-          <span className="rounded-full bg-volt/10 p-1.5 text-volt">
+          <span className="rounded-full bg-[#A60E13]/15 p-1.5 text-[#A60E13]">
             <svg
               width="12"
               height="12"
@@ -120,3 +120,4 @@ export default function TournamentCard({
     </div>
   )
 }
+

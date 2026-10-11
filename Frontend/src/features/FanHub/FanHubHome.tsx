@@ -175,7 +175,7 @@ export default function FanHubHome({
             onClick={() => setStatusFilter("ongoing")}
             className={`min-h-[38px] rounded-lg px-3.5 py-1.5 font-mono text-xs font-bold transition cursor-pointer ${
               statusFilter === "ongoing"
-                ? "bg-volt text-ink shadow-md shadow-volt/20"
+                ? "bg-volt text-white shadow-md shadow-volt/20"
                 : "border border-line bg-ink text-mute hover:text-white"
             }`}
           >
@@ -186,7 +186,7 @@ export default function FanHubHome({
             onClick={() => setStatusFilter("upcoming")}
             className={`min-h-[38px] rounded-lg px-3.5 py-1.5 font-mono text-xs font-bold transition cursor-pointer ${
               statusFilter === "upcoming"
-                ? "bg-volt text-ink shadow-md shadow-volt/20"
+                ? "bg-volt text-white shadow-md shadow-volt/20"
                 : "border border-line bg-ink text-mute hover:text-white"
             }`}
           >
@@ -197,7 +197,7 @@ export default function FanHubHome({
             onClick={() => setStatusFilter("past")}
             className={`min-h-[38px] rounded-lg px-3.5 py-1.5 font-mono text-xs font-bold transition cursor-pointer ${
               statusFilter === "past"
-                ? "bg-volt text-ink shadow-md shadow-volt/20"
+                ? "bg-volt text-white shadow-md shadow-volt/20"
                 : "border border-line bg-ink text-mute hover:text-white"
             }`}
           >
@@ -208,7 +208,7 @@ export default function FanHubHome({
             onClick={() => setStatusFilter("all")}
             className={`min-h-[38px] rounded-lg px-3.5 py-1.5 font-mono text-xs font-bold transition cursor-pointer ${
               statusFilter === "all"
-                ? "bg-volt text-ink shadow-md shadow-volt/20"
+                ? "bg-volt text-white shadow-md shadow-volt/20"
                 : "border border-line bg-ink text-mute hover:text-white"
             }`}
           >
@@ -278,7 +278,7 @@ export default function FanHubHome({
               setCityFilter("All")
               setSearchQuery("")
             }}
-            className="mt-4 rounded-xl bg-volt px-4 py-2 font-mono text-xs font-bold uppercase text-ink hover:brightness-110 cursor-pointer"
+            className="mt-4 rounded-xl bg-volt px-4 py-2 font-mono text-xs font-bold uppercase text-white hover:brightness-110 cursor-pointer"
           >
             Reset All Filters
           </button>
@@ -403,7 +403,7 @@ export default function FanHubHome({
                       <button
                         type="button"
                         onClick={() => onSelectTournament(tourney.id)}
-                        className="flex min-h-[42px] flex-1 items-center justify-center gap-1.5 rounded-xl bg-volt px-4 py-2 text-xs font-black uppercase tracking-wider text-ink transition hover:brightness-110 active:scale-95 cursor-pointer shadow-md shadow-volt/20"
+                        className="flex min-h-[42px] flex-1 items-center justify-center gap-1.5 rounded-xl bg-volt px-4 py-2 text-xs font-black uppercase tracking-wider text-white transition hover:brightness-110 active:scale-95 cursor-pointer shadow-md shadow-volt/20"
                       >
                         <span>View Tournament Hub</span>
                         <svg

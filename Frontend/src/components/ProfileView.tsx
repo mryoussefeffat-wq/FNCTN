@@ -100,7 +100,7 @@ export default function ProfileView({ go, profile }: ProfileViewProps) {
             className="h-full w-full object-cover opacity-60 transition group-hover:opacity-80"
           />
           <span className="absolute inset-0 flex items-center justify-center">
-            <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-volt text-ink transition group-hover:scale-110 shadow-lg shadow-volt/20">
+            <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-volt text-white transition group-hover:scale-110 shadow-lg shadow-volt/20">
               <svg
                 width="20"
                 height="20"
@@ -121,7 +121,7 @@ export default function ProfileView({ go, profile }: ProfileViewProps) {
       <div className="absolute inset-x-0 bottom-[calc(4.75rem+env(safe-area-inset-bottom,0px))] z-10 bg-gradient-to-t from-ink via-ink to-transparent px-4 pb-2 pt-6 sm:px-5 sm:pb-3">
         <button
           type="button"
-          className="flex min-h-[48px] w-full items-center justify-center rounded-xl bg-volt py-3 text-xs sm:text-sm font-extrabold uppercase tracking-widest text-ink transition hover:brightness-110 active:scale-[0.99] shadow-lg shadow-volt/20 cursor-pointer"
+          className="flex min-h-[48px] w-full items-center justify-center rounded-xl bg-volt py-3 text-xs sm:text-sm font-extrabold uppercase tracking-widest text-white transition hover:brightness-110 active:scale-[0.99] shadow-lg shadow-volt/20 cursor-pointer"
         >
           Contact for Scouting
         </button>

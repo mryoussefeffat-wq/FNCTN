@@ -132,7 +132,7 @@ export default function TournamentDashboard({
               <button
                 type="button"
                 onClick={() => onOpenLiveMatch(liveMatchId)}
-                className="flex min-h-[46px] items-center justify-center gap-2 rounded-xl bg-volt px-5 py-2.5 text-xs font-black uppercase tracking-wider text-ink transition hover:brightness-110 active:scale-95 shadow-xl shadow-volt/30 cursor-pointer"
+                className="flex min-h-[46px] items-center justify-center gap-2 rounded-xl bg-volt px-5 py-2.5 text-xs font-black uppercase tracking-wider text-white transition hover:brightness-110 active:scale-95 shadow-xl shadow-volt/30 cursor-pointer"
               >
                 <span className="h-2 w-2 rounded-full bg-red-600 animate-ping" />
                 <span>Jump to Live Scoreboard</span>
@@ -150,7 +150,7 @@ export default function TournamentDashboard({
             onClick={() => setActiveTab("overview")}
             className={`flex min-h-[42px] items-center gap-2 rounded-xl px-4 py-2 font-mono text-xs font-bold transition cursor-pointer ${
               activeTab === "overview"
-                ? "bg-volt text-ink shadow-md shadow-volt/20"
+                ? "bg-volt text-white shadow-md shadow-volt/20"
                 : "text-mute hover:text-white"
             }`}
           >
@@ -162,7 +162,7 @@ export default function TournamentDashboard({
             onClick={() => setActiveTab("brackets")}
             className={`flex min-h-[42px] items-center gap-2 rounded-xl px-4 py-2 font-mono text-xs font-bold transition cursor-pointer ${
               activeTab === "brackets"
-                ? "bg-volt text-ink shadow-md shadow-volt/20"
+                ? "bg-volt text-white shadow-md shadow-volt/20"
                 : "text-mute hover:text-white"
             }`}
           >
@@ -174,7 +174,7 @@ export default function TournamentDashboard({
             onClick={() => setActiveTab("teams")}
             className={`flex min-h-[42px] items-center gap-2 rounded-xl px-4 py-2 font-mono text-xs font-bold transition cursor-pointer ${
               activeTab === "teams"
-                ? "bg-volt text-ink shadow-md shadow-volt/20"
+                ? "bg-volt text-white shadow-md shadow-volt/20"
                 : "text-mute hover:text-white"
             }`}
           >
@@ -186,7 +186,7 @@ export default function TournamentDashboard({
             onClick={() => setActiveTab("news")}
             className={`flex min-h-[42px] items-center gap-2 rounded-xl px-4 py-2 font-mono text-xs font-bold transition cursor-pointer ${
               activeTab === "news"
-                ? "bg-volt text-ink shadow-md shadow-volt/20"
+                ? "bg-volt text-white shadow-md shadow-volt/20"
                 : "text-mute hover:text-white"
             }`}
           >

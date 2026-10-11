@@ -75,7 +75,7 @@ export default function LiveNowBanner({
           <button
             type="button"
             onClick={() => onOpenLiveMatch(liveMatch.id, liveMatch.tournamentId)}
-            className="flex min-h-[46px] w-full md:w-auto items-center justify-center gap-2 rounded-xl bg-volt px-5 py-2.5 text-xs font-black uppercase tracking-wider text-ink transition hover:brightness-110 active:scale-95 shadow-lg shadow-volt/25 cursor-pointer"
+            className="flex min-h-[46px] w-full md:w-auto items-center justify-center gap-2 rounded-xl bg-volt px-5 py-2.5 text-xs font-black uppercase tracking-wider text-white transition hover:brightness-110 active:scale-95 shadow-lg shadow-volt/25 cursor-pointer"
           >
             <span>Enter Live Match Center</span>
             <svg
