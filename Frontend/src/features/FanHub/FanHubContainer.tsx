@@ -20,6 +20,7 @@ interface FanHubContainerProps {
   onBackToLanding: () => void
   onOpenParticipantPortal: () => void
   onOpenOrganizer?: () => void
+  onOpenUniversity?: () => void
 }
 
 export default function FanHubContainer({
@@ -28,6 +29,7 @@ export default function FanHubContainer({
   onBackToLanding,
   onOpenParticipantPortal,
   onOpenOrganizer,
+  onOpenUniversity,
 }: FanHubContainerProps) {
   const [view, setView] = useState<FanHubView>(
     initialMatchId
@@ -145,16 +147,6 @@ export default function FanHubContainer({
 
           {/* Cross-App Navigation CTAs */}
           <div className="flex items-center gap-2 sm:gap-3">
-            {onOpenOrganizer && (
-              <button
-                type="button"
-                onClick={onOpenOrganizer}
-                className="hidden lg:flex min-h-[38px] items-center gap-1.5 rounded-xl border border-line bg-card/80 px-3 py-1.5 font-mono text-xs text-mute hover:border-volt hover:text-white transition cursor-pointer active:scale-95"
-              >
-                <span>⚽ Pitch Tools</span>
-              </button>
-            )}
-
             <button
               type="button"
               onClick={onBackToLanding}

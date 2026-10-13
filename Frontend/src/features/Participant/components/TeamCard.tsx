@@ -122,7 +122,7 @@ export default function TeamCard({
       <div className="mt-4 rounded-xl border border-[#1F1F24] bg-[#000000] p-3 text-xs font-mono">
         <div className="flex justify-between text-[#8E8E93] mb-1.5 text-[11px]">
           <span>
-            Roster Clearance:{" "}
+            Team Clearance:{" "}
             <strong className="text-white">{verifiedCount} / {totalRoster} IDs Verified</strong>
           </span>
           <span className={verificationPercent === 100 ? "text-emerald-400 font-bold" : "text-amber-400 font-bold"}>
@@ -184,7 +184,7 @@ export default function TeamCard({
             onClick={() => setRosterExpanded(!rosterExpanded)}
             className="flex items-center gap-2 font-mono text-xs font-bold text-white hover:text-[#A60E13] transition cursor-pointer"
           >
-            <span>{rosterExpanded ? "Hide Roster" : `View Team Roster (${team.roster.length})`}</span>
+            <span>{rosterExpanded ? "Hide Team Members" : `View Team Members (${team.roster.length})`}</span>
             <span>{rosterExpanded ? "▲" : "▼"}</span>
           </button>
 

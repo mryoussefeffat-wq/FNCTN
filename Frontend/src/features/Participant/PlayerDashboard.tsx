@@ -425,7 +425,7 @@ export default function PlayerDashboard({
 
                 <div className="mt-4 rounded-xl border border-[#1F1F24] bg-[#000000] p-3 text-xs">
                   <div className="flex justify-between text-[#8E8E93] mb-1 font-mono text-[11px]">
-                    <span>Team Roster Clearance</span>
+                    <span>Team Clearance</span>
                     <span className="text-emerald-400 font-bold">100% IDs Verified</span>
                   </div>
                   <div className="h-1.5 w-full bg-[#1F1F24] rounded-full overflow-hidden">
@@ -439,7 +439,7 @@ export default function PlayerDashboard({
             ) : (
               <div className="mt-4 py-4 text-center">
                 <p className="text-xs text-[#8E8E93]">
-                  You are not currently enrolled in a team roster.
+                  You are not currently enrolled in a team.
                 </p>
               </div>
             )}
@@ -450,7 +450,7 @@ export default function PlayerDashboard({
             onClick={() => onNavigate("teams")}
             className="mt-5 flex min-h-[42px] w-full items-center justify-center gap-2 rounded-xl border border-[#1F1F24] bg-[#000000] py-2.5 font-mono text-xs font-bold uppercase text-white hover:border-[#A60E13] hover:text-[#A60E13] transition cursor-pointer"
           >
-            <span>Open Team Hub &amp; Roster</span>
+            <span>Open Team Hub</span>
             <span>→</span>
           </button>
         </section>

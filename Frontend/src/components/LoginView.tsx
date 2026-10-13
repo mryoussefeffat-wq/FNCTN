@@ -4,10 +4,11 @@ import Logo from "./Logo"
 import Field from "./Field"
 
 interface LoginViewProps {
-  onLogin: () => void
+  onLogin: (role?: "athlete" | "organizer" | "university") => void
   onNavigateToSignUpAthlete: () => void
   onBackToLanding?: () => void
   onOpenOrganizer?: () => void
+  onOpenUniversity?: () => void
   signupNotice?: string | null
   defaultEmail?: string
 }
@@ -17,6 +18,7 @@ export default function LoginView({
   onNavigateToSignUpAthlete,
   onBackToLanding,
   onOpenOrganizer,
+  onOpenUniversity,
   signupNotice,
   defaultEmail = "",
 }: LoginViewProps) {
@@ -31,7 +33,33 @@ export default function LoginView({
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    onLogin()
+    const lower = email.toLowerCase()
+    if (
+      lower.includes("university") ||
+      lower.includes("dean") ||
+      lower.includes("registrar")
+    ) {
+      if (onOpenUniversity) {
+        onOpenUniversity()
+        return
+      }
+      onLogin("university")
+      return
+    }
+
+    if (
+      lower.includes("organizer") ||
+      lower.includes("committee") ||
+      lower.includes("admin")
+    ) {
+      if (onOpenOrganizer) {
+        onOpenOrganizer()
+        return
+      }
+      onLogin("organizer")
+      return
+    }
+    onLogin("athlete")
   }
 
   return (
@@ -101,7 +129,7 @@ export default function LoginView({
           </button>
         </form>
 
-        <div className="mt-6 sm:mt-8 flex flex-col items-center gap-3 text-xs sm:text-sm">
+        <div className="mt-6 flex flex-col items-center gap-3 text-xs sm:text-sm border-t border-[#1F1F24] pt-5">
           <button
             type="button"
             onClick={onNavigateToSignUpAthlete}
@@ -109,21 +137,6 @@ export default function LoginView({
           >
             Create Student Athlete Account
           </button>
-          {onOpenOrganizer && (
-            <button
-              type="button"
-              onClick={onOpenOrganizer}
-              className="font-mono text-xs text-[#8E8E93] hover:text-[#A60E13] py-1 transition cursor-pointer"
-            >
-              Enter as Tournament Committee Official →
-            </button>
-          )}
-          <a
-            href="#"
-            className="text-mute underline underline-offset-4 hover:text-white py-1"
-          >
-            Apply for Scout Access
-          </a>
         </div>
       </div>
     </Phone>

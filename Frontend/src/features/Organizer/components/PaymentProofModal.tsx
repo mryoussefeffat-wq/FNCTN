@@ -89,7 +89,7 @@ export default function PaymentProofModal({
           </div>
 
           <div className="col-span-2 sm:col-span-3 pt-2 border-t border-[#1F1F24] flex items-center justify-between text-[11px]">
-            <span className="text-[#8E8E93]">Roster Accreditation Status:</span>
+            <span className="text-[#8E8E93]">Team Accreditation Status:</span>
             <span className="font-mono font-bold text-white">
               {payment.rosterVerifiedCount} / {payment.rosterCount} IDs Verified
             </span>

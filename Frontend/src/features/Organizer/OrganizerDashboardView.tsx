@@ -9,6 +9,7 @@ interface OrganizerDashboardViewProps {
   onOpenPitchController: (tournamentId: string) => void
   onOpenReviewDesk: (tournamentId: string) => void
   onOpenSetup: (tournamentId: string) => void
+  onDeleteTournament?: (tournamentId: string) => void
 }
 
 type FilterTab = "all" | "live" | "upcoming" | "completed"
@@ -21,6 +22,7 @@ export default function OrganizerDashboardView({
   onOpenPitchController,
   onOpenReviewDesk,
   onOpenSetup,
+  onDeleteTournament,
 }: OrganizerDashboardViewProps) {
   const [filter, setFilter] = useState<FilterTab>("all")
 
@@ -45,7 +47,7 @@ export default function OrganizerDashboardView({
             Organizer Dashboard
           </h1>
           <p className="mt-1 text-xs sm:text-sm text-[#8E8E93]">
-            Oversee collegiate championship fixtures, verify student-athlete rosters, and control pitch-side match days.
+            Oversee collegiate championship fixtures, verify student-athlete teams, and control pitch-side match days.
           </p>
         </div>
 
@@ -151,6 +153,17 @@ export default function OrganizerDashboardView({
               }`}
             >
               Upcoming
+            </button>
+            <button
+              type="button"
+              onClick={() => setFilter("completed")}
+              className={`rounded-lg px-3 py-1.5 transition cursor-pointer ${
+                filter === "completed"
+                  ? "bg-[#A60E13] text-white font-bold"
+                  : "bg-[#1C1C1E] text-[#8E8E93] hover:text-white"
+              }`}
+            >
+              Completed
             </button>
           </div>
 
@@ -261,6 +274,21 @@ export default function OrganizerDashboardView({
                   >
                     <span>⚙️ Setup &amp; Rules</span>
                   </button>
+
+                  {onDeleteTournament && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (window.confirm(`Are you sure you want to delete "${t.title}"?`)) {
+                          onDeleteTournament(t.id)
+                        }
+                      }}
+                      title="Delete Tournament"
+                      className="flex min-h-[42px] items-center justify-center rounded-xl border border-[#1F1F24] bg-[#1C1C1E] px-3 py-2 font-mono text-xs text-[#8E8E93] hover:text-[#A60E13] hover:border-[#A60E13]/50 transition cursor-pointer active:scale-95"
+                    >
+                      🗑️
+                    </button>
+                  )}
                 </div>
 
                 {/* Primary Pitch Day Controller Action */}

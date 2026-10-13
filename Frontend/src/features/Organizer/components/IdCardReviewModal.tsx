@@ -186,8 +186,8 @@ export default function IdCardReviewModal({
               <option value="Expired academic student ID card">
                 Expired academic student ID card
               </option>
-              <option value="Name on National ID does not match roster submission">
-                Name on National ID does not match roster submission
+              <option value="Name on National ID does not match team submission">
+                Name on National ID does not match team submission
               </option>
               <option value="Not an official accredited Egyptian university card">
                 Not an official accredited Egyptian university card

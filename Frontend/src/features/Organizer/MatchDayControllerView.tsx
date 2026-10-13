@@ -188,7 +188,7 @@ export default function MatchDayControllerView({
             Final Score: {match.teamA.name} {match.teamA.score} - {match.teamB.score} {match.teamB.name}
           </p>
           <p className="font-mono text-xs text-[#8E8E93] mt-0.5">
-            Winner has been advanced to the next bracket round in the Fan Hub.
+            Winner has been advanced to the next bracket round.
           </p>
         </div>
       )}
@@ -251,7 +251,7 @@ export default function MatchDayControllerView({
                   : "bg-[#1C1C1E] text-[#8E8E93] hover:text-white"
               }`}
             >
-              <span>{match.teamA.name} Roster</span>
+              <span>{match.teamA.name} Team</span>
               <span className="rounded-full bg-white/20 px-1.5 py-0.2 text-[10px]">
                 {teamAPresent}/{match.teamA.roster.length}
               </span>
@@ -266,7 +266,7 @@ export default function MatchDayControllerView({
                   : "bg-[#1C1C1E] text-[#8E8E93] hover:text-white"
               }`}
             >
-              <span>{match.teamB.name} Roster</span>
+              <span>{match.teamB.name} Team</span>
               <span className="rounded-full bg-white/20 px-1.5 py-0.2 text-[10px]">
                 {teamBPresent}/{match.teamB.roster.length}
               </span>

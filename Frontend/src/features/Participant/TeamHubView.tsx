@@ -51,13 +51,13 @@ export default function TeamHubView({
       <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-[#1F1F24] pb-5 gap-4">
         <div>
           <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#A60E13]">
-            Collegiate Roster Hub
+            Collegiate Team Hub
           </span>
           <h1 className="mt-1 font-sans font-bold text-2xl sm:text-3xl text-white">
-            Team Hub &amp; Roster Management
+            Team Hub &amp; Management
           </h1>
           <p className="mt-1 text-xs sm:text-sm text-[#8E8E93]">
-            Manage your enrolled university teams, join rosters via QR or code, and apply to tournaments.
+            Manage your enrolled university teams, join teams via QR or code, and apply to tournaments.
           </p>
         </div>
 
@@ -93,7 +93,7 @@ export default function TeamHubView({
               No Teams Joined Yet
             </h2>
             <p className="mt-2 text-xs sm:text-sm text-[#8E8E93] leading-relaxed">
-              You are currently registered as an independent student-athlete. To enter official university tournaments, join an existing campus roster or establish a new team.
+              You are currently registered as an independent student-athlete. To enter official university tournaments, join an existing campus team or establish a new team.
             </p>
           </div>
 

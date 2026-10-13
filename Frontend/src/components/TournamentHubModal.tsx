@@ -68,7 +68,7 @@ export default function TournamentHubModal({
         {/* Participating Teams List */}
         <div className="mb-4 sm:mb-5">
           <h4 className="mb-2 font-mono text-[11px] sm:text-xs font-bold uppercase tracking-wider text-white">
-            Participating University Rosters:
+            Participating University Teams:
           </h4>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {event.teams.map((t, idx) => (

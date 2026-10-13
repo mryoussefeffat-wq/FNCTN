@@ -121,7 +121,7 @@ export default function TournamentDashboard({
                 </span>
               </div>
               <div className="rounded-2xl border border-line bg-ink/80 px-4 py-2 text-center backdrop-blur-md">
-                <span className="block font-mono text-xs text-mute">Rosters</span>
+                <span className="block font-mono text-xs text-mute">Teams</span>
                 <span className="font-mono text-lg font-black text-white">
                   {tournament.teamsCountLabel}
                 </span>
@@ -178,7 +178,7 @@ export default function TournamentDashboard({
                 : "text-mute hover:text-white"
             }`}
           >
-            <span>Teams &amp; Rosters ({tournament.teams.length})</span>
+            <span>Teams ({tournament.teams.length})</span>
           </button>
 
           <button

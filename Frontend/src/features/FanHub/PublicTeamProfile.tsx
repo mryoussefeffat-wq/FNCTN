@@ -98,7 +98,7 @@ export default function PublicTeamProfile({
       <section className="rounded-2xl sm:rounded-3xl border border-line bg-card/80 p-5 sm:p-7 backdrop-blur-md">
         <div className="border-b border-line/80 pb-4">
           <div className="inline-flex items-center gap-1.5 rounded-full border border-volt/40 bg-volt/10 px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase text-volt">
-            👥 Active Roster
+            👥 Active Team Members
           </div>
           <h3 className="display mt-1.5 text-xl sm:text-2xl text-white">
             Registered Student Athletes

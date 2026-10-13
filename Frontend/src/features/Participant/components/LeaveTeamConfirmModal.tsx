@@ -48,7 +48,7 @@ export default function LeaveTeamConfirmModal({
         {/* Warning Message Card */}
         <div className="mt-4 rounded-2xl border border-[#1F1F24] bg-[#000000] p-4 text-xs font-mono space-y-2">
           <p className="text-white font-bold">
-            Leaving this team will remove you from the active competition roster.
+            Leaving this team will remove you from active competition.
           </p>
           <p className="text-[#8E8E93] leading-relaxed">
             You will lose tournament eligibility under <strong className="text-white">{team.name}</strong>, and
@@ -56,7 +56,7 @@ export default function LeaveTeamConfirmModal({
           </p>
           {isCaptain && (
             <div className="mt-2 rounded-lg border border-[#A60E13]/40 bg-[#A60E13]/15 p-2.5 text-[#A60E13] text-[11px]">
-              👑 <strong>Captain Notice:</strong> You are currently the registered Captain of this team. Leaving will transfer captaincy to the next active roster player or disband the team if no other players remain.
+              👑 <strong>Captain Notice:</strong> You are currently the registered Captain of this team. Leaving will transfer captaincy to the next active team player or disband the team if no other players remain.
             </div>
           )}
         </div>

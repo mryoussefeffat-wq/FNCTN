@@ -165,7 +165,7 @@ export default function LiveMatchViewer({
               : "text-mute hover:text-white"
           }`}
         >
-          Lineups &amp; Rosters
+          Lineups &amp; Teams
         </button>
       </div>
 

@@ -4,8 +4,6 @@
  */
 
 export interface AthleteSignUpPayload {
-  firstName: string
-  familyName: string
   email: string
   password: string
 }
@@ -15,13 +13,15 @@ export interface SignUpResponse {
   email: string
   full_name: string
   role: string
+  phoneNumber?: string
+  gender?: string
   university_id?: number | null
   created_at?: string
 }
 
 const STORAGE_KEY = "fnctn_athletes_mock"
 
-function getLocalAthletes(): Record<string, { fullName: string role: string }> {
+function getLocalAthletes(): Record<string, { fullName: string; role: string }> {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     return raw ? JSON.parse(raw) : {}
@@ -48,7 +48,9 @@ export async function registerAthlete(
   data: AthleteSignUpPayload,
 ): Promise<SignUpResponse> {
   const cleanEmail = data.email.trim().toLowerCase()
-  const fullName = `${data.firstName.trim()} ${data.familyName.trim()}`
+  const fullName = data.firstName && data.familyName
+    ? `${data.firstName.trim()} ${data.familyName.trim()}`
+    : cleanEmail.split("@")[0]
 
   // Realistic UI loading simulation
   await new Promise((resolve) => setTimeout(resolve, 500))

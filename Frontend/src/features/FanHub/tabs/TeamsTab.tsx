@@ -25,7 +25,7 @@ export default function TeamsTab({ teams, onSelectTeam }: TeamsTabProps) {
             Participating University Teams
           </h3>
           <p className="text-xs text-mute">
-            Explore university delegation squads, season win/loss records, and active athlete rosters.
+            Explore university delegation squads, season win/loss records, and active athlete teams.
           </p>
         </div>
 
@@ -95,7 +95,7 @@ export default function TeamsTab({ teams, onSelectTeam }: TeamsTabProps) {
                 onClick={() => onSelectTeam(tm.id)}
                 className="mt-4 flex min-h-[40px] w-full items-center justify-center gap-1.5 rounded-xl bg-card border border-line py-2 font-mono text-xs font-bold uppercase tracking-wider text-white transition hover:border-volt hover:text-volt active:scale-95 cursor-pointer"
               >
-                <span>View Team Profile &amp; Roster</span>
+                <span>View Team Profile</span>
                 <span className="text-volt">→</span>
               </button>
             </div>

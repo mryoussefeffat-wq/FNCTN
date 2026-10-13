@@ -7,7 +7,7 @@ interface CreateTournamentModalProps {
   onCreateTournament: (tournament: CommitteeTournament) => void
 }
 
-const SPORTS = ["Football", "Basketball", "Padel", "Track & Field"]
+const SPORTS = ["Football", "Basketball", "Padel", "Track & Field", "Volleyball", "Tennis"]
 
 export default function CreateTournamentModal({
   isOpen,
@@ -66,6 +66,7 @@ export default function CreateTournamentModal({
     }
 
     onCreateTournament(newTournament)
+    setTitle("")
     onClose()
   }
 

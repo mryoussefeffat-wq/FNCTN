@@ -46,7 +46,7 @@ export default function VerificationDeskView({
             Committee Verification &amp; Payment Desk
           </span>
           <h1 className="mt-1 font-sans font-bold text-2xl sm:text-3xl text-white">
-            Roster &amp; Payment Desk
+            Team &amp; Payment Desk
           </h1>
           <p className="mt-1 text-xs sm:text-sm text-[#8E8E93]">
             Inspect official university student IDs, verify Egyptian national IDs, and approve team entry fees.
@@ -242,7 +242,7 @@ export default function VerificationDeskView({
                       <span className="text-[#8E8E93]">via {payment.method}</span>
                       <span className="text-[#8E8E93]">Ref: <strong className="text-white">{payment.referenceCode}</strong></span>
                       <span className="text-[#8E8E93]">
-                        Roster Clearance: <strong className="text-white">{payment.rosterVerifiedCount}/{payment.rosterCount}</strong>
+                        Team Clearance: <strong className="text-white">{payment.rosterVerifiedCount}/{payment.rosterCount}</strong>
                       </span>
                     </div>
 

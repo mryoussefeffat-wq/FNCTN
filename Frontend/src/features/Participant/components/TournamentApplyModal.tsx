@@ -110,7 +110,7 @@ export default function TournamentApplyModal({
                         📅 {t.dates} · 📍 {t.venue}
                       </p>
                       <p className="font-mono text-[10px] text-white/70 mt-1">
-                        Entry Fee: {t.entryFee} · Roster: Min {t.minRoster} Players
+                        Entry Fee: {t.entryFee} · Team: Min {t.minRoster} Players
                       </p>
                     </div>
 
@@ -137,7 +137,7 @@ export default function TournamentApplyModal({
 
             <div className="space-y-2.5">
               <div className="flex items-center justify-between">
-                <span>1. Minimum Roster Size (Min {selectedTourney.minRoster} Players):</span>
+                <span>1. Minimum Team Size (Min {selectedTourney.minRoster} Players):</span>
                 <span className={meetsMinRoster ? "text-emerald-400 font-bold" : "text-[#A60E13] font-bold"}>
                   {meetsMinRoster ? `✓ ${totalRoster} / ${selectedTourney.minRoster} Registered` : `⚠️ ${totalRoster} / ${selectedTourney.minRoster} Registered`}
                 </span>
@@ -172,7 +172,7 @@ export default function TournamentApplyModal({
               className="mt-0.5 rounded border-[#1F1F24] text-[#A60E13] focus:ring-[#A60E13]"
             />
             <span>
-              I certify as Team Captain that all rostered players are actively enrolled collegiate students representing {team.university}.
+              I certify as Team Captain that all team players are actively enrolled collegiate students representing {team.university}.
             </span>
           </label>
 

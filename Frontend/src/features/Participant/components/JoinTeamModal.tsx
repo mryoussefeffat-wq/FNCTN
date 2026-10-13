@@ -110,7 +110,7 @@ export default function JoinTeamModal({
 
         <div className="border-b border-[#1F1F24] pb-4">
           <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#A60E13]">
-            Roster Invitation
+            Team Invitation
           </span>
           <h2 className="mt-1 font-sans font-bold text-xl sm:text-2xl text-white">
             Join Campus Team
@@ -234,7 +234,7 @@ export default function JoinTeamModal({
                   University: {userUniversity} · Sport: Football
                 </p>
                 <p className="text-emerald-300 text-[10px] mt-2">
-                  Joining will add your verified student profile to this team roster.
+                  Joining will add your verified student profile to this team.
                 </p>
               </div>
             )}

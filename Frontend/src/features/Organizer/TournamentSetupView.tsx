@@ -1,9 +1,17 @@
-import { useState } from "react"
-import type { CommitteeTournament, OrganizerFanService, OrganizerSponsor } from "../../types/organizer"
+import { useState, useEffect } from "react"
+import type {
+  CommitteeTournament,
+  OrganizerFanService,
+  OrganizerSponsor,
+  TournamentStatus,
+} from "../../types/organizer"
 
 interface TournamentSetupViewProps {
   tournament: CommitteeTournament
+  allTournaments?: CommitteeTournament[]
+  onSelectTournament?: (id: string) => void
   onSaveTournament: (updated: CommitteeTournament) => void
+  onDeleteTournament?: (id: string) => void
   onBackToDashboard: () => void
 }
 
@@ -20,11 +28,15 @@ const ALL_FAN_SERVICES: { id: string; icon: string; label: string }[] = [
 
 export default function TournamentSetupView({
   tournament,
+  allTournaments,
+  onSelectTournament,
   onSaveTournament,
+  onDeleteTournament,
   onBackToDashboard,
 }: TournamentSetupViewProps) {
   const [title, setTitle] = useState(tournament.title)
   const [sport, setSport] = useState(tournament.sport)
+  const [status, setStatus] = useState<TournamentStatus>(tournament.status)
   const [league, setLeague] = useState(tournament.universityLeague)
   const [venue, setVenue] = useState(tournament.venue)
   const [pitchName, setPitchName] = useState(tournament.pitchName)
@@ -51,6 +63,29 @@ export default function TournamentSetupView({
   const [newSponsorTagline, setNewSponsorTagline] = useState("")
 
   const [savedSuccess, setSavedSuccess] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+
+  // Keep state synchronized whenever active tournament changes
+  useEffect(() => {
+    setTitle(tournament.title)
+    setSport(tournament.sport)
+    setStatus(tournament.status)
+    setLeague(tournament.universityLeague)
+    setVenue(tournament.venue)
+    setPitchName(tournament.pitchName)
+    setStartDate(tournament.startDate)
+    setEndDate(tournament.endDate)
+    setMaxTeams(tournament.maxTeams)
+    setEntryFeeEgp(tournament.entryFeeEgp)
+    setPaymentInstructions(tournament.paymentInstructions)
+    setDuration(tournament.rules.matchDurationMinutes)
+    setExtraTime(tournament.rules.extraTimeEnabled)
+    setPenalties(tournament.rules.penaltyShootoutEnabled)
+    setMaxSubs(tournament.rules.maxSubstitutes)
+    setRulesSummary(tournament.rules.summary)
+    setFanServices(tournament.fanServices)
+    setSponsors(tournament.sponsors)
+  }, [tournament])
 
   function toggleFanService(serviceItem: { id: string; icon: string; label: string }) {
     setFanServices((prev) => {
@@ -89,6 +124,7 @@ export default function TournamentSetupView({
       ...tournament,
       title: title.trim(),
       sport,
+      status,
       universityLeague: league,
       venue,
       pitchName,
@@ -134,19 +170,79 @@ export default function TournamentSetupView({
           </h1>
         </div>
 
-        {savedSuccess && (
-          <div className="rounded-xl border border-emerald-500/50 bg-emerald-950/40 px-4 py-2 font-mono text-xs text-emerald-400">
-            ✓ Settings Saved Successfully!
-          </div>
-        )}
+        <div className="flex flex-wrap items-center gap-2.5">
+          {allTournaments && allTournaments.length > 1 && onSelectTournament && (
+            <div className="flex items-center gap-1.5 rounded-xl border border-[#1F1F24] bg-[#0A0A0A] px-3 py-1.5 font-mono text-xs text-[#8E8E93]">
+              <span>Switch:</span>
+              <select
+                value={tournament.id}
+                onChange={(e) => onSelectTournament(e.target.value)}
+                className="bg-transparent text-white font-sans text-xs focus:outline-none cursor-pointer"
+              >
+                {allTournaments.map((t) => (
+                  <option key={t.id} value={t.id} className="bg-black text-white">
+                    {t.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {savedSuccess && (
+            <div className="rounded-xl border border-emerald-500/50 bg-emerald-950/40 px-3.5 py-1.5 font-mono text-xs text-emerald-400">
+              ✓ Saved!
+            </div>
+          )}
+        </div>
       </div>
 
       <form onSubmit={handleSave} className="space-y-8">
         {/* ---------------- 1. BASIC TOURNAMENT CONFIGURATION ---------------- */}
         <section className="rounded-3xl border border-[#1F1F24] bg-[#0A0A0A] p-5 sm:p-7 space-y-4 shadow-xl">
-          <h2 className="font-sans font-bold text-lg text-white border-b border-[#1F1F24] pb-3">
-            1. General Fixture Identity &amp; Venue
-          </h2>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#1F1F24] pb-3">
+            <h2 className="font-sans font-bold text-lg text-white">
+              1. General Fixture Identity &amp; Venue
+            </h2>
+
+            {/* Status Segmented Toggle */}
+            <div className="flex items-center gap-1.5 rounded-xl border border-[#1F1F24] bg-[#000000] p-1 font-mono text-xs">
+              <span className="text-[10px] text-[#8E8E93] uppercase px-1 hidden sm:inline">Status:</span>
+              <button
+                type="button"
+                onClick={() => setStatus("upcoming")}
+                className={`rounded-lg px-2.5 py-1 transition cursor-pointer text-[11px] ${
+                  status === "upcoming"
+                    ? "bg-[#1C1C1E] text-white font-bold border border-white/20"
+                    : "text-[#8E8E93] hover:text-white"
+                }`}
+              >
+                Upcoming
+              </button>
+              <button
+                type="button"
+                onClick={() => setStatus("live")}
+                className={`flex items-center gap-1 rounded-lg px-2.5 py-1 transition cursor-pointer text-[11px] ${
+                  status === "live"
+                    ? "bg-emerald-950/80 text-emerald-300 font-bold border border-emerald-500/50"
+                    : "text-[#8E8E93] hover:text-white"
+                }`}
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span>Live</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setStatus("completed")}
+                className={`rounded-lg px-2.5 py-1 transition cursor-pointer text-[11px] ${
+                  status === "completed"
+                    ? "bg-[#A60E13]/20 text-[#A60E13] font-bold border border-[#A60E13]/40"
+                    : "text-[#8E8E93] hover:text-white"
+                }`}
+              >
+                Completed
+              </button>
+            </div>
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div>
@@ -166,12 +262,18 @@ export default function TournamentSetupView({
               <label className="block font-mono text-[10px] uppercase text-[#8E8E93] mb-1">
                 Sport
               </label>
-              <input
-                type="text"
-                disabled
+              <select
                 value={sport}
-                className="w-full rounded-xl border border-[#1F1F24] bg-[#1C1C1E] px-3.5 py-2.5 text-sm text-[#8E8E93]"
-              />
+                onChange={(e) => setSport(e.target.value as any)}
+                className="w-full rounded-xl border border-[#1F1F24] bg-[#000000] px-3.5 py-2.5 text-sm text-white focus:border-[#A60E13] focus:outline-none"
+              >
+                <option value="Football">Football</option>
+                <option value="Basketball">Basketball</option>
+                <option value="Padel">Padel</option>
+                <option value="Track & Field">Track &amp; Field</option>
+                <option value="Volleyball">Volleyball</option>
+                <option value="Tennis">Tennis</option>
+              </select>
             </div>
 
             <div>
@@ -339,7 +441,7 @@ export default function TournamentSetupView({
             4. Fan Services &amp; Pitch-Side Amenities
           </h2>
           <p className="text-xs text-[#8E8E93]">
-            Toggle spectator services visible on the tournament card and Fan Hub.
+            Toggle spectator services visible on the tournament showcase card.
           </p>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -441,6 +543,27 @@ export default function TournamentSetupView({
           </div>
         </section>
 
+        {/* ---------------- 6. DANGER ZONE: TOURNAMENT DELETION ---------------- */}
+        {onDeleteTournament && (
+          <section className="rounded-3xl border border-[#A60E13]/30 bg-[#0A0A0A] p-5 sm:p-7 space-y-3">
+            <h2 className="font-sans font-bold text-sm text-[#A60E13] uppercase tracking-wider">
+              Danger Zone
+            </h2>
+            <p className="text-xs text-[#8E8E93]">
+              Permanently remove this tournament fixture, enrolled teams, and scheduled match days.
+            </p>
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => setShowDeleteModal(true)}
+                className="rounded-xl border border-[#A60E13]/60 bg-[#A60E13]/10 px-4 py-2 font-mono text-xs font-bold text-[#A60E13] hover:bg-[#A60E13] hover:text-white transition cursor-pointer active:scale-95"
+              >
+                🗑️ Delete Tournament Fixture
+              </button>
+            </div>
+          </section>
+        )}
+
         {/* Save Button */}
         <div className="flex items-center justify-end gap-3 pt-3">
           <button
@@ -459,6 +582,51 @@ export default function TournamentSetupView({
           </button>
         </div>
       </form>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && onDeleteTournament && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div className="w-full max-w-md rounded-3xl border border-[#A60E13]/60 bg-[#0A0A0A] p-6 shadow-2xl space-y-4">
+            <div className="flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#A60E13]/20 text-xl text-[#A60E13]">
+                ⚠️
+              </span>
+              <div>
+                <h3 className="font-sans font-bold text-lg text-white">
+                  Delete Tournament?
+                </h3>
+                <p className="text-xs text-[#8E8E93]">
+                  This action cannot be undone.
+                </p>
+              </div>
+            </div>
+
+            <p className="text-xs text-white/90 leading-relaxed">
+              Are you sure you want to remove <span className="font-bold text-white">"{tournament.title}"</span>? All tournament configurations, spectator services, and teams will be cleared.
+            </p>
+
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowDeleteModal(false)}
+                className="rounded-xl border border-[#1F1F24] bg-[#1C1C1E] px-4 py-2 font-mono text-xs text-[#8E8E93] hover:text-white transition cursor-pointer"
+              >
+                Keep Tournament
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowDeleteModal(false)
+                  onDeleteTournament(tournament.id)
+                }}
+                className="rounded-xl bg-[#A60E13] px-5 py-2 font-mono text-xs font-bold text-white hover:bg-[#BF1218] transition cursor-pointer active:scale-95 shadow-md shadow-[#A60E13]/40"
+              >
+                Yes, Delete Fixture
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

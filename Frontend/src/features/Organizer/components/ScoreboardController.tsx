@@ -143,7 +143,7 @@ export default function ScoreboardController({
                 </div>
               </div>
               <span className="font-mono text-[10px] uppercase text-[#A60E13] font-bold">
-                Home Roster
+                Home Team
               </span>
             </div>
 
@@ -193,7 +193,7 @@ export default function ScoreboardController({
                 </div>
               </div>
               <span className="font-mono text-[10px] uppercase text-[#8E8E93] font-bold">
-                Away Roster
+                Away Team
               </span>
             </div>
 
@@ -311,10 +311,10 @@ export default function ScoreboardController({
                 value={eventPlayer}
                 onChange={(e) => setEventPlayer(e.target.value)}
                 placeholder="e.g. Omar Hassan (#9)"
-                list="roster-suggestions"
+                list="team-player-suggestions"
                 className="w-full rounded-xl border border-[#1F1F24] bg-[#000000] px-3 py-2 text-xs text-white focus:border-[#A60E13] focus:outline-none"
               />
-              <datalist id="roster-suggestions">
+              <datalist id="team-player-suggestions">
                 {activeRoster.map((p) => (
                   <option key={p.id} value={`${p.name} (#${p.jerseyNumber})`} />
                 ))}
@@ -339,7 +339,7 @@ export default function ScoreboardController({
             type="submit"
             className="w-full min-h-[44px] rounded-xl bg-[#A60E13] py-2.5 font-mono text-xs font-bold uppercase tracking-wider text-white hover:bg-[#BF1218] transition cursor-pointer active:scale-95 shadow-md shadow-[#A60E13]/30"
           >
-            Submit &amp; Broadcast Event to Fan Hub
+            Submit &amp; Broadcast Match Event
           </button>
         </form>
       )}

@@ -326,7 +326,7 @@ export default function ProfileSettingsView({
         {/* Action Controls */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
           <p className="font-mono text-xs text-[#8E8E93]">
-            Changes synchronize across your official tournament roster.
+            Changes synchronize across your official tournament team.
           </p>
 
           <button

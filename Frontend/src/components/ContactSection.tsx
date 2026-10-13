@@ -152,7 +152,7 @@ export default function ContactSection() {
                   Send Us a Message
                 </h3>
                 <p className="text-xs text-white/70 mt-1 font-normal">
-                  Fill in your details below and our tournament coordination committee will respond within 24 hours.
+                  Fill in your details below and our tournament coordination committee will respond within 72 hours.
                 </p>
 
                 <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
@@ -258,7 +258,7 @@ export default function ContactSection() {
                   {/* Submit Button */}
                   <div className="mt-2 flex items-center justify-between border-t border-[#1F1F24] pt-3">
                     <span className="text-[11px] font-mono text-[#8E8E93]">
-                      Response within 24 hours guaranteed.
+                      Response within 72 hours guaranteed.
                     </span>
 
                     <button

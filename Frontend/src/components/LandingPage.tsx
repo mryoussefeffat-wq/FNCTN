@@ -13,6 +13,7 @@ interface LandingPageProps {
   onSignUpAthlete: () => void
   onOpenFanHub?: (tournamentId?: string, matchId?: string) => void
   onOpenOrganizerPortal?: () => void
+  onOpenUniversityPortal?: () => void
 }
 
 export default function LandingPage({
@@ -20,6 +21,7 @@ export default function LandingPage({
   onSignUpAthlete,
   onOpenFanHub,
   onOpenOrganizerPortal,
+  onOpenUniversityPortal,
 }: LandingPageProps) {
   const [statusTab, setStatusTab] = useState<EventStatusTab>("upcoming")
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -323,26 +325,6 @@ export default function LandingPage({
                 </button>
               </div>
 
-              {/* Quick Tournament Status Indicator */}
-              <div className="mt-5 sm:mt-6 flex flex-wrap items-center gap-2 sm:gap-3 text-xs text-[#8E8E93]">
-                <span className="font-mono text-[#A60E13] font-bold">
-                  {featuredTournament.statusCategory === "live"
-                    ? "🔴 Active Tournament"
-                    : "📅 Next Upcoming Tournament"}
-                </span>
-                <span>·</span>
-                <button
-                  type="button"
-                  onClick={() =>
-                    onOpenFanHub
-                      ? onOpenFanHub(featuredTournament.id)
-                      : openTournamentHub(featuredTournament)
-                  }
-                  className="font-mono text-white underline decoration-[#A60E13] hover:text-[#A60E13] cursor-pointer min-h-[36px] flex items-center"
-                >
-                  {featuredTournament.title} →
-                </button>
-              </div>
             </div>
 
             {/* Hero Current / Upcoming Tournament Showcase Card */}
@@ -402,24 +384,14 @@ export default function LandingPage({
                   </div>
                 </div>
 
-                {/* Sponsor Showcase Section on Card Body (Similar to Fan Services) */}
-                <div className="mt-3.5 border-t border-[#1F1F24] pt-2.5">
-                  <p className="mb-1.5 font-mono text-[10px] uppercase tracking-wider text-[#8E8E93]">
-                    Official Tournament Sponsor:
-                  </p>
-                  <div className="flex items-center gap-2.5 rounded-xl border border-[#1F1F24] bg-[#000000] p-2.5">
-                    <span className="flex h-7 px-2.5 items-center justify-center rounded-lg bg-[#0A0A0A] border border-[#A60E13]/30 font-mono text-[10px] font-bold text-white shrink-0 shadow-sm">
-                      {featuredTournament.sponsor.badge}
-                    </span>
-                    <div className="min-w-0 flex-1 truncate">
-                      <span className="block font-semibold text-white text-xs truncate">
-                        {featuredTournament.sponsor.name}
-                      </span>
-                      <span className="block font-mono text-[10px] text-[#8E8E93] truncate">
-                        {featuredTournament.sponsor.tagline}
-                      </span>
-                    </div>
-                  </div>
+                {/* Sponsor Display */}
+                <div className="mt-3 flex items-center gap-2 border-t border-[#1F1F24] pt-2.5">
+                  <span className="flex h-5 px-1.5 items-center justify-center rounded bg-[#1F1F24] border border-[#2A2A30] font-mono text-[9px] font-bold text-white shrink-0 shadow-sm">
+                    {featuredTournament.sponsor.badge}
+                  </span>
+                  <span className="font-sans font-medium text-xs text-white/90 truncate">
+                    {featuredTournament.sponsor.name}
+                  </span>
                 </div>
 
                 {/* Fan Zone Perks */}
@@ -690,7 +662,7 @@ export default function LandingPage({
                   Form Team
                 </h3>
                 <p className="mt-2 text-xs leading-relaxed text-white/80 font-normal">
-                  Create a new university roster or join your existing campus
+                  Create a new university team or join your existing campus
                   team instantly with a 6-character code.
                 </p>
               </div>
@@ -802,13 +774,6 @@ export default function LandingPage({
               >
                 Contact Us
               </button>
-              <button
-                type="button"
-                onClick={onEnterApp}
-                className="text-white hover:text-[#A60E13] underline decoration-[#A60E13] underline-offset-4 cursor-pointer min-h-[40px] flex items-center font-bold"
-              >
-                Live App Portal
-              </button>
               {onOpenOrganizerPortal && (
                 <button
                   type="button"
@@ -816,6 +781,15 @@ export default function LandingPage({
                   className="font-mono text-xs text-[#8E8E93] hover:text-[#A60E13] cursor-pointer min-h-[40px] flex items-center transition"
                 >
                   ⚽ Committee Pitch Tools
+                </button>
+              )}
+              {onOpenUniversityPortal && (
+                <button
+                  type="button"
+                  onClick={onOpenUniversityPortal}
+                  className="font-mono text-xs text-[#8E8E93] hover:text-[#A60E13] cursor-pointer min-h-[40px] flex items-center transition"
+                >
+                  🏛️ University Registrar Desk
                 </button>
               )}
             </div>

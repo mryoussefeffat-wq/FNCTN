@@ -24,14 +24,16 @@ export type OrganizerTab = "dashboard" | "setup" | "review" | "pitch"
 
 interface OrganizerContainerProps {
   onBackToLanding: () => void
-  onOpenFanHub: () => void
+  onOpenFanHub?: () => void
   onOpenParticipantPortal: () => void
+  onOpenUniversity?: () => void
 }
 
 export default function OrganizerContainer({
   onBackToLanding,
   onOpenFanHub,
   onOpenParticipantPortal,
+  onOpenUniversity,
 }: OrganizerContainerProps) {
   const [activeTab, setActiveTab] = useState<OrganizerTab>("dashboard")
   const [tournaments, setTournaments] = useState<CommitteeTournament[]>(INITIAL_COMMITTEE_TOURNAMENTS)
@@ -50,6 +52,20 @@ export default function OrganizerContainer({
   function handleCreateTournament(newTourn: CommitteeTournament) {
     setTournaments((prev) => [newTourn, ...prev])
     setSelectedTournamentId(newTourn.id)
+    setActiveTab("setup")
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }
+
+  function handleDeleteTournament(tournamentId: string) {
+    setTournaments((prev) => {
+      const remaining = prev.filter((t) => t.id !== tournamentId)
+      if (selectedTournamentId === tournamentId && remaining.length > 0) {
+        setSelectedTournamentId(remaining[0].id)
+      }
+      return remaining
+    })
+    setActiveTab("dashboard")
+    window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
   function handleSaveTournament(updated: CommitteeTournament) {
@@ -125,6 +141,19 @@ export default function OrganizerContainer({
             <button
               type="button"
               onClick={() => {
+                setActiveTab("setup")
+                window.scrollTo({ top: 0, behavior: "smooth" })
+              }}
+              className={`hover:text-[#A60E13] transition cursor-pointer ${
+                activeTab === "setup" ? "text-[#A60E13] font-bold" : "text-[#8E8E93]"
+              }`}
+            >
+              Setup &amp; Rules
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
                 setActiveTab("review")
                 window.scrollTo({ top: 0, behavior: "smooth" })
               }}
@@ -166,14 +195,27 @@ export default function OrganizerContainer({
               <span className="sm:hidden">Athlete</span>
             </button>
 
-            <button
-              type="button"
-              onClick={onOpenFanHub}
-              className="flex min-h-[38px] items-center gap-1.5 rounded-xl border border-[#A60E13]/50 bg-[#A60E13]/10 px-3 py-1.5 font-mono text-xs text-white hover:bg-[#A60E13] transition cursor-pointer active:scale-95"
-            >
-              <span className="hidden sm:inline">Fan Hub</span>
-              <span className="sm:hidden">Fans</span>
-            </button>
+            {onOpenUniversity && (
+              <button
+                type="button"
+                onClick={onOpenUniversity}
+                className="flex min-h-[38px] items-center gap-1.5 rounded-xl border border-[#1F1F24] bg-[#0A0A0A] px-3 py-1.5 font-mono text-xs text-[#8E8E93] hover:border-[#A60E13] hover:text-white transition cursor-pointer active:scale-95"
+              >
+                <span className="hidden sm:inline">University</span>
+                <span className="sm:hidden">Uni</span>
+              </button>
+            )}
+
+            {onOpenFanHub && (
+              <button
+                type="button"
+                onClick={onOpenFanHub}
+                className="flex min-h-[38px] items-center gap-1.5 rounded-xl border border-[#A60E13]/50 bg-[#A60E13]/10 px-3 py-1.5 font-mono text-xs text-white hover:bg-[#A60E13] transition cursor-pointer active:scale-95"
+              >
+                <span className="hidden sm:inline">Fan Hub</span>
+                <span className="sm:hidden">Fans</span>
+              </button>
+            )}
 
             <button
               type="button"
@@ -213,13 +255,17 @@ export default function OrganizerContainer({
               setActiveTab("setup")
               window.scrollTo({ top: 0, behavior: "smooth" })
             }}
+            onDeleteTournament={handleDeleteTournament}
           />
         )}
 
         {activeTab === "setup" && (
           <TournamentSetupView
             tournament={selectedTournament}
+            allTournaments={tournaments}
+            onSelectTournament={(id) => setSelectedTournamentId(id)}
             onSaveTournament={handleSaveTournament}
+            onDeleteTournament={handleDeleteTournament}
             onBackToDashboard={() => setActiveTab("dashboard")}
           />
         )}
@@ -264,6 +310,23 @@ export default function OrganizerContainer({
         <button
           type="button"
           onClick={() => {
+            setActiveTab("setup")
+            window.scrollTo({ top: 0, behavior: "smooth" })
+          }}
+          className={`flex min-h-[48px] flex-col items-center justify-center gap-1 py-1 transition-all active:scale-95 cursor-pointer ${
+            activeTab === "setup" ? "text-[#A60E13] font-bold" : "text-[#8E8E93]"
+          }`}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+          </svg>
+          <span className="font-mono text-[9px] uppercase tracking-wider">Setup</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => {
             setActiveTab("review")
             window.scrollTo({ top: 0, behavior: "smooth" })
           }}
@@ -293,18 +356,6 @@ export default function OrganizerContainer({
             <polygon points="10 8 16 12 10 16 10 8" />
           </svg>
           <span className="font-mono text-[9px] uppercase tracking-wider">Pitch Live</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={onOpenFanHub}
-          className="flex min-h-[48px] flex-col items-center justify-center gap-1 py-1 transition-all active:scale-95 cursor-pointer text-[#8E8E93]"
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-            <circle cx="9" cy="7" r="4" />
-          </svg>
-          <span className="font-mono text-[9px] uppercase tracking-wider">Fan Hub</span>
         </button>
       </nav>
 

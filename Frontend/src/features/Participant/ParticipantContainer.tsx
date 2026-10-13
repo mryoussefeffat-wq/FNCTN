@@ -22,6 +22,7 @@ interface ParticipantContainerProps {
   onBackToLanding: () => void
   onOpenFanHub?: () => void
   onOpenOrganizer?: () => void
+  onOpenUniversity?: () => void
   onLogout: () => void
 }
 
@@ -29,6 +30,7 @@ export default function ParticipantContainer({
   onBackToLanding,
   onOpenFanHub,
   onOpenOrganizer,
+  onOpenUniversity,
   onLogout,
 }: ParticipantContainerProps) {
   const [activeTab, setActiveTab] = useState<ParticipantTab>("dashboard")
@@ -142,16 +144,6 @@ export default function ParticipantContainer({
 
           {/* Cross-App Navigation CTAs */}
           <div className="flex items-center gap-2 sm:gap-3">
-            {onOpenOrganizer && (
-              <button
-                type="button"
-                onClick={onOpenOrganizer}
-                className="hidden lg:flex min-h-[38px] items-center gap-1.5 rounded-xl border border-[#1F1F24] bg-[#0A0A0A] px-3 py-1.5 font-mono text-xs text-[#8E8E93] hover:border-[#A60E13] hover:text-[#A60E13] transition cursor-pointer active:scale-95"
-              >
-                <span>⚽ Pitch Tools</span>
-              </button>
-            )}
-
             {onOpenFanHub && (
               <button
                 type="button"

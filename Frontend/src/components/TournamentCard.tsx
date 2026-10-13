@@ -60,24 +60,14 @@ export default function TournamentCard({
           </div>
         </div>
 
-        {/* 1. Sponsor Showcase Section (Dedicated body section with sized logo/badge) */}
-        <div className="mt-3.5 border-t border-[#1F1F24] pt-3">
-          <p className="mb-2 font-mono text-[10px] uppercase tracking-wider text-[#8E8E93]">
-            Presented By:
-          </p>
-          <div className="flex items-center gap-2.5 rounded-xl border border-[#1F1F24] bg-[#000000] p-2.5 transition group-hover:border-[#A60E13]/40">
-            <span className="flex h-7 px-2.5 items-center justify-center rounded-lg bg-[#0A0A0A] border border-[#A60E13]/30 font-mono text-[10px] font-bold text-white shrink-0 shadow-sm">
-              {event.sponsor.badge}
-            </span>
-            <div className="min-w-0 flex-1 truncate">
-              <span className="block font-semibold text-white text-xs truncate">
-                {event.sponsor.name}
-              </span>
-              <span className="block font-mono text-[10px] text-[#8E8E93] truncate">
-                {event.sponsor.tagline}
-              </span>
-            </div>
-          </div>
+        {/* Sponsor Display */}
+        <div className="mt-3 flex items-center gap-2 border-t border-[#1F1F24] pt-2.5">
+          <span className="flex h-5 px-1.5 items-center justify-center rounded bg-[#1F1F24] border border-[#2A2A30] font-mono text-[9px] font-bold text-white shrink-0 shadow-sm">
+            {event.sponsor.badge}
+          </span>
+          <span className="font-sans font-medium text-xs text-white/90 truncate">
+            {event.sponsor.name}
+          </span>
         </div>
 
         {/* 2. Fan Services Spectator Perks List */}

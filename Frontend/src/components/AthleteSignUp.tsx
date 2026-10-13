@@ -6,9 +6,7 @@ interface AthleteSignUpProps {
   onNavigateToLogin: () => void
   onSuccess: (info: {
     email: string
-    fullName: string
-    firstName: string
-    familyName: string
+    fullName?: string
   }) => void
 }
 
@@ -16,8 +14,6 @@ export default function AthleteSignUp({
   onNavigateToLogin,
   onSuccess,
 }: AthleteSignUpProps) {
-  const [firstName, setFirstName] = useState("")
-  const [familyName, setFamilyName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
@@ -34,8 +30,6 @@ export default function AthleteSignUp({
 
     // Validate using utility function
     const validation = validateAthleteSignUp({
-      firstName,
-      familyName,
       email,
       password,
     })
@@ -49,22 +43,18 @@ export default function AthleteSignUp({
 
     try {
       const result = await registerAthlete({
-        firstName,
-        familyName,
         email,
         password,
       })
 
       setSuccessMessage(
-        `Welcome aboard, ${result.full_name}! Setting up your questionnaire...`,
+        `Welcome aboard! Setting up your questionnaire...`,
       )
 
       setTimeout(() => {
         onSuccess({
           email: result.email,
           fullName: result.full_name,
-          firstName: firstName.trim(),
-          familyName: familyName.trim(),
         })
       }, 1000)
     } catch (err: unknown) {
@@ -172,42 +162,6 @@ export default function AthleteSignUp({
 
       {/* Registration Form */}
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Name Fields Grid */}
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <label className="block">
-            <span className="mb-1.5 block font-mono text-[10px] uppercase tracking-widest text-mute">
-              First Name
-            </span>
-            <input
-              type="text"
-              name="given-name"
-              autoComplete="given-name"
-              required
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              placeholder="e.g. Omar"
-              disabled={loading || Boolean(successMessage)}
-              className="w-full min-h-[46px] rounded-xl border border-line bg-card px-4 py-3 text-base sm:text-sm text-white outline-none transition placeholder:text-mute/50 focus:border-volt focus:ring-1 focus:ring-volt/40 disabled:opacity-50"
-            />
-          </label>
-
-          <label className="block">
-            <span className="mb-1.5 block font-mono text-[10px] uppercase tracking-widest text-mute">
-              Family Name
-            </span>
-            <input
-              type="text"
-              name="family-name"
-              autoComplete="family-name"
-              required
-              value={familyName}
-              onChange={(e) => setFamilyName(e.target.value)}
-              placeholder="e.g. Hassan"
-              disabled={loading || Boolean(successMessage)}
-              className="w-full min-h-[46px] rounded-xl border border-line bg-card px-4 py-3 text-base sm:text-sm text-white outline-none transition placeholder:text-mute/50 focus:border-volt focus:ring-1 focus:ring-volt/40 disabled:opacity-50"
-            />
-          </label>
-        </div>
 
         {/* Email Field */}
         <label className="block">

@@ -106,7 +106,7 @@ export default function FanHubHome({
           </h1>
           <p className="mt-1 max-w-2xl text-xs sm:text-sm text-mute">
             Follow live scores, inspect interactive tournament brackets, reserve spectator passes,
-            and explore university team rosters across Egypt.
+            and explore university teams across Egypt.
           </p>
         </div>
 

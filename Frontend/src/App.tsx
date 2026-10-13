@@ -7,9 +7,13 @@ import AthleteOnboarding, {
 import LoginView from "./components/LoginView"
 import { Phone } from "./components/PhoneLayout"
 import ParticipantContainer from "./features/Participant/ParticipantContainer"
+import OrganizerContainer from "./features/Organizer/OrganizerContainer"
+import UniversityAdminContainer from "./features/UniversityAdmin/UniversityAdminContainer"
+
+export type AppViewMode = "landing" | "portal" | "organizer" | "fanhub" | "university"
 
 export default function App() {
-  const [viewMode, setViewMode] = useState<"landing" | "portal">("landing")
+  const [viewMode, setViewMode] = useState<AppViewMode>("landing")
   const [authed, setAuthed] = useState(false)
   const [authScreen, setAuthScreen] =
     useState<"login" | "signup_athlete" | "onboarding_athlete">("login")
@@ -23,10 +27,11 @@ export default function App() {
     firstName: "Omar",
     lastName: "Hassan",
     email: "omar.hassan@university.edu.eg",
+    phoneNumber: "+20 100 123 4567",
+    gender: "Male",
     age: "21",
     sports: ["Football"],
     university: "Cairo University",
-    notInUniversity: false,
     bio: "Striker & Season MVP. Computer Engineering sophomore focused on sports analytics and collegiate tournaments.",
   })
 
@@ -41,15 +46,51 @@ export default function App() {
           setAuthScreen("signup_athlete")
           setViewMode("portal")
         }}
+        onOpenOrganizerPortal={() => {
+          setViewMode("organizer")
+        }}
+        onOpenUniversityPortal={() => {
+          setViewMode("university")
+        }}
       />
     )
   }
 
-  // 2. Logged-in Participant (Student Athlete) Portal View
+  // 2. Tournament Committee Organizer Command Center
+  if (viewMode === "organizer") {
+    return (
+      <OrganizerContainer
+        onBackToLanding={() => setViewMode("landing")}
+        onOpenParticipantPortal={() => setViewMode("portal")}
+        onOpenUniversity={() => setViewMode("university")}
+      />
+    )
+  }
+
+  // 3. Fan Hub (Deactivated for current release phase)
+  if (viewMode === "fanhub") {
+    setViewMode("landing")
+    return null
+  }
+
+  // 4. University Directorate & Registrar Admin Portal
+  if (viewMode === "university") {
+    return (
+      <UniversityAdminContainer
+        onBackToLanding={() => setViewMode("landing")}
+        onOpenParticipantPortal={() => setViewMode("portal")}
+        onOpenOrganizer={() => setViewMode("organizer")}
+      />
+    )
+  }
+
+  // 5. Logged-in Participant (Student Athlete) Portal View
   if (viewMode === "portal" && authed) {
     return (
       <ParticipantContainer
         onBackToLanding={() => setViewMode("landing")}
+        onOpenOrganizer={() => setViewMode("organizer")}
+        onOpenUniversity={() => setViewMode("university")}
         onLogout={() => {
           setAuthed(false)
           setAuthScreen("login")
@@ -134,14 +175,22 @@ export default function App() {
           </Phone>
         ) : (
           <LoginView
-            onLogin={() => {
-              setAuthed(true)
+            onLogin={(role) => {
+              if (role === "organizer") {
+                setViewMode("organizer")
+              } else if (role === "university") {
+                setViewMode("university")
+              } else {
+                setAuthed(true)
+              }
             }}
             onNavigateToSignUpAthlete={() => {
               setSignupNotice(null)
               setAuthScreen("signup_athlete")
             }}
             onBackToLanding={() => setViewMode("landing")}
+            onOpenOrganizer={() => setViewMode("organizer")}
+            onOpenUniversity={() => setViewMode("university")}
             signupNotice={signupNotice}
             defaultEmail={prefillEmail}
           />

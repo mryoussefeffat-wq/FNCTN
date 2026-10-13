@@ -23,17 +23,9 @@ export function isMinLength(value: string, min: number): boolean {
  * Validates athlete sign-up fields.
  */
 export function validateAthleteSignUp(data: {
-  firstName: string
-  familyName: string
   email: string
   password: string
-}): { valid: boolean error?: string } {
-  if (!data.firstName.trim()) {
-    return { valid: false, error: "Please enter your first name." }
-  }
-  if (!data.familyName.trim()) {
-    return { valid: false, error: "Please enter your family name." }
-  }
+}): { valid: boolean; error?: string } {
   if (!isValidEmail(data.email)) {
     return {
       valid: false,
@@ -55,13 +47,22 @@ export function validateAthleteSignUp(data: {
 export function validateAthleteOnboarding(data: {
   firstName: string
   lastName: string
+  phoneNumber: string
+  gender: string
   age: string
   sports: string[]
   university: string
-  notInUniversity: boolean
-}): { valid: boolean error?: string } {
+}): { valid: boolean; error?: string } {
   if (!data.firstName.trim() || !data.lastName.trim()) {
     return { valid: false, error: "First and last name are required." }
+  }
+
+  if (!data.phoneNumber.trim()) {
+    return { valid: false, error: "Please enter your phone number." }
+  }
+
+  if (!data.gender.trim()) {
+    return { valid: false, error: "Please select your gender." }
   }
 
   const ageNum = parseInt(data.age, 10)
@@ -79,7 +80,7 @@ export function validateAthleteOnboarding(data: {
     }
   }
 
-  if (!data.notInUniversity && !data.university.trim()) {
+  if (!data.university.trim()) {
     return {
       valid: false,
       error: "Please choose or specify your affiliated university.",

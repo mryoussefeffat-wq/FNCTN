@@ -6,10 +6,11 @@ export interface AthleteProfileData {
   firstName: string
   lastName: string
   email: string
+  phoneNumber: string
+  gender: string
   age: string
   sports: string[]
   university: string
-  notInUniversity: boolean
   bio: string
 }
 
@@ -26,11 +27,12 @@ export default function AthleteOnboarding({
 }: AthleteOnboardingProps) {
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
+  const [phoneNumber, setPhoneNumber] = useState("")
+  const [gender, setGender] = useState("")
   const [age, setAge] = useState("")
   const [selectedSports, setSelectedSports] = useState<string[]>(["Football"])
   const [university, setUniversity] = useState(UNIVERSITIES[0])
   const [customUniversity, setCustomUniversity] = useState("")
-  const [notInUniversity, setNotInUniversity] = useState(false)
   const [bio, setBio] = useState("")
 
   const [error, setError] = useState<string | null>(null)
@@ -56,8 +58,8 @@ export default function AthleteOnboarding({
     e.preventDefault()
     setError(null)
 
-    let finalUniversity = notInUniversity ? "Independent Athlete" : university
-    if (!notInUniversity && university === "Other / Unlisted") {
+    let finalUniversity = university
+    if (university === "Other / Unlisted") {
       if (!customUniversity.trim()) {
         setError("Please enter your university name.")
         return
@@ -68,10 +70,11 @@ export default function AthleteOnboarding({
     const validation = validateAthleteOnboarding({
       firstName,
       lastName,
+      phoneNumber,
+      gender,
       age,
       sports: selectedSports,
       university: finalUniversity,
-      notInUniversity,
     })
 
     if (!validation.valid) {
@@ -86,10 +89,11 @@ export default function AthleteOnboarding({
         firstName: firstName.trim(),
         lastName: lastName.trim(),
         email: initialData.email,
+        phoneNumber: phoneNumber.trim(),
+        gender,
         age: age.trim(),
         sports: selectedSports,
         university: finalUniversity,
-        notInUniversity,
         bio: bio.trim(),
       })
     }, 400)
@@ -126,7 +130,7 @@ export default function AthleteOnboarding({
         </h1>
         <p className="mt-2 text-xs leading-relaxed text-mute">
           Tell us about your game. Scouts and tournament organizers use these
-          details to verify eligibility, rosters, and scout reports.
+          details to verify eligibility, teams, and scout reports.
         </p>
       </div>
 
@@ -183,6 +187,62 @@ export default function AthleteOnboarding({
               placeholder="e.g. Hassan"
               className="w-full min-h-[46px] rounded-xl border border-line bg-card px-4 py-3 text-base sm:text-sm text-white outline-none transition placeholder:text-mute/50 focus:border-volt focus:ring-1 focus:ring-volt/40"
             />
+          </label>
+        </div>
+
+        {/* Phone & Gender Grid */}
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <label className="block">
+            <span className="mb-1.5 block font-mono text-[10px] uppercase tracking-widest text-mute">
+              Phone Number *
+            </span>
+            <input
+              type="tel"
+              name="tel"
+              autoComplete="tel"
+              required
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+              placeholder="e.g. 01012345678"
+              className="w-full min-h-[46px] rounded-xl border border-line bg-card px-4 py-3 text-base sm:text-sm text-white outline-none transition placeholder:text-mute/50 focus:border-volt focus:ring-1 focus:ring-volt/40"
+            />
+          </label>
+
+          <label className="block">
+            <span className="mb-1.5 block font-mono text-[10px] uppercase tracking-widest text-mute">
+              Gender *
+            </span>
+            <div className="relative">
+              <select
+                name="sex"
+                required
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+                className="w-full min-h-[46px] appearance-none rounded-xl border border-line bg-card px-4 py-3 pr-10 text-base sm:text-sm text-white outline-none transition focus:border-volt focus:ring-1 focus:ring-volt/40 cursor-pointer"
+              >
+                <option value="" disabled className="bg-card text-mute">
+                  Select Gender
+                </option>
+                <option value="Male" className="bg-card text-white">
+                  Male
+                </option>
+                <option value="Female" className="bg-card text-white">
+                  Female
+                </option>
+              </select>
+              <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-mute">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </div>
+            </div>
           </label>
         </div>
 
@@ -244,76 +304,44 @@ export default function AthleteOnboarding({
 
         {/* University Section */}
         <div className="space-y-3 pt-1">
-          <div className="flex items-center justify-between">
-            <span className="font-mono text-[10px] uppercase tracking-widest text-mute">
-              University Affiliation
-            </span>
+          <span className="font-mono text-[10px] uppercase tracking-widest text-mute block">
+            University Affiliation
+          </span>
 
-            {/* Not in university Checkbox */}
-            <label className="inline-flex min-h-[40px] cursor-pointer items-center gap-2 select-none py-1">
-              <input
-                type="checkbox"
-                checked={notInUniversity}
-                onChange={(e) => setNotInUniversity(e.target.checked)}
-                className="h-5 w-5 rounded border-line bg-card text-volt accent-volt focus:ring-volt/40"
-              />
-              <span className="font-mono text-[11px] text-white">
-                Not in university
-              </span>
-            </label>
+          <div className="relative">
+            <select
+              value={university}
+              onChange={(e) => setUniversity(e.target.value)}
+              className="w-full min-h-[46px] appearance-none rounded-xl border border-line bg-card px-4 py-3 pr-10 text-base sm:text-sm text-white outline-none transition focus:border-volt focus:ring-1 focus:ring-volt/40 cursor-pointer"
+            >
+              {UNIVERSITIES.map((u) => (
+                <option key={u} value={u} className="bg-ink text-white">
+                  {u}
+                </option>
+              ))}
+            </select>
+            <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-mute">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </div>
           </div>
 
-          {!notInUniversity ? (
-            <>
-              <div className="relative">
-                <select
-                  value={university}
-                  onChange={(e) => setUniversity(e.target.value)}
-                  className="w-full min-h-[46px] appearance-none rounded-xl border border-line bg-card px-4 py-3 pr-10 text-base sm:text-sm text-white outline-none transition focus:border-volt focus:ring-1 focus:ring-volt/40 cursor-pointer"
-                >
-                  {UNIVERSITIES.map((u) => (
-                    <option key={u} value={u} className="bg-ink text-white">
-                      {u}
-                    </option>
-                  ))}
-                </select>
-                <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-mute">
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M6 9l6 6 6-6" />
-                  </svg>
-                </div>
-              </div>
-
-              {university === "Other / Unlisted" && (
-                <input
-                  type="text"
-                  value={customUniversity}
-                  onChange={(e) => setCustomUniversity(e.target.value)}
-                  placeholder="Enter your institution name"
-                  className="w-full min-h-[46px] rounded-xl border border-line bg-card px-4 py-3 text-base sm:text-sm text-white outline-none transition placeholder:text-mute/50 focus:border-volt focus:ring-1 focus:ring-volt/40"
-                />
-              )}
-            </>
-          ) : (
-            <div className="flex items-center gap-2.5 rounded-xl border border-line/60 bg-card/60 p-3.5 text-xs text-mute">
-              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-volt/10 font-mono text-[10px] font-bold text-volt">
-                ✓
-              </span>
-              <span>
-                Registered as an{" "}
-                <strong className="text-white">
-                  Independent / Free Agent Athlete
-                </strong>
-                . You can compete in open tournaments.
-              </span>
-            </div>
+          {university === "Other / Unlisted" && (
+            <input
+              type="text"
+              value={customUniversity}
+              onChange={(e) => setCustomUniversity(e.target.value)}
+              placeholder="Enter your institution name"
+              className="w-full min-h-[46px] rounded-xl border border-line bg-card px-4 py-3 text-base sm:text-sm text-white outline-none transition placeholder:text-mute/50 focus:border-volt focus:ring-1 focus:ring-volt/40"
+            />
           )}
         </div>
 
@@ -352,7 +380,7 @@ export default function AthleteOnboarding({
 
       {/* Footer Info */}
       <p className="mt-2 pb-6 text-center font-mono text-[10px] leading-relaxed text-mute/60">
-        You can update your sports roster, positions, and academic bio anytime
+        You can update your sports teams, positions, and academic bio anytime
         in Settings.
       </p>
     </div>
